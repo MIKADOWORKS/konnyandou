@@ -1,0 +1,224 @@
+import { TarotCard } from '@/types/tarot';
+
+export const majorArcana: TarotCard[] = [
+  {
+    id: 0,
+    name: '愚者',
+    nameEn: 'The Fool',
+    emoji: '🃏',
+    keywords: {
+      upright: ['新たな始まり', '自由', '冒険', '無邪気'],
+      reversed: ['無謀', '軽率', '不安定', 'リスク'],
+    },
+  },
+  {
+    id: 1,
+    name: '魔術師',
+    nameEn: 'The Magician',
+    emoji: '🪄',
+    keywords: {
+      upright: ['創造力', '自信', '技術', '意志の力'],
+      reversed: ['未熟', '空回り', '詐欺', '才能の無駄遣い'],
+    },
+  },
+  {
+    id: 2,
+    name: '女教皇',
+    nameEn: 'The High Priestess',
+    emoji: '🌙',
+    keywords: {
+      upright: ['直感', '神秘', '知性', '静けさ'],
+      reversed: ['秘密', '混乱', '表面的', '直感の無視'],
+    },
+  },
+  {
+    id: 3,
+    name: '女帝',
+    nameEn: 'The Empress',
+    emoji: '👑',
+    keywords: {
+      upright: ['豊かさ', '母性', '美', '自然'],
+      reversed: ['過保護', '依存', '怠惰', '創造力の枯渇'],
+    },
+  },
+  {
+    id: 4,
+    name: '皇帝',
+    nameEn: 'The Emperor',
+    emoji: '🏛️',
+    keywords: {
+      upright: ['権威', '安定', 'リーダーシップ', '秩序'],
+      reversed: ['独裁', '頑固', '支配的', '未成熟'],
+    },
+  },
+  {
+    id: 5,
+    name: '教皇',
+    nameEn: 'The Hierophant',
+    emoji: '📿',
+    keywords: {
+      upright: ['伝統', '教え', '信仰', '慈悲'],
+      reversed: ['形骸化', '独善', '束縛', '反抗'],
+    },
+  },
+  {
+    id: 6,
+    name: '恋人',
+    nameEn: 'The Lovers',
+    emoji: '💕',
+    keywords: {
+      upright: ['愛', '調和', '選択', 'パートナーシップ'],
+      reversed: ['不調和', '誘惑', '優柔不断', '価値観の相違'],
+    },
+  },
+  {
+    id: 7,
+    name: '戦車',
+    nameEn: 'The Chariot',
+    emoji: '⚔️',
+    keywords: {
+      upright: ['勝利', '前進', '意志', '克服'],
+      reversed: ['暴走', '方向性の喪失', '挫折', '自制心の欠如'],
+    },
+  },
+  {
+    id: 8,
+    name: '力',
+    nameEn: 'Strength',
+    emoji: '🦁',
+    keywords: {
+      upright: ['内なる力', '勇気', '忍耐', '優しさ'],
+      reversed: ['弱さ', '自信喪失', '抑圧', '力の乱用'],
+    },
+  },
+  {
+    id: 9,
+    name: '隠者',
+    nameEn: 'The Hermit',
+    emoji: '🏔️',
+    keywords: {
+      upright: ['内省', '探求', '孤独', '知恵'],
+      reversed: ['孤立', '引きこもり', '頑固', '閉鎖的'],
+    },
+  },
+  {
+    id: 10,
+    name: '運命の輪',
+    nameEn: 'Wheel of Fortune',
+    emoji: '🎡',
+    keywords: {
+      upright: ['転機', '運命', 'チャンス', 'サイクル'],
+      reversed: ['不運', '停滞', '抵抗', '悪循環'],
+    },
+  },
+  {
+    id: 11,
+    name: '正義',
+    nameEn: 'Justice',
+    emoji: '⚖️',
+    keywords: {
+      upright: ['公正', 'バランス', '真実', '因果応報'],
+      reversed: ['不公平', '偏見', '不正', 'バランスの崩れ'],
+    },
+  },
+  {
+    id: 12,
+    name: '吊るされた男',
+    nameEn: 'The Hanged Man',
+    emoji: '🙃',
+    keywords: {
+      upright: ['忍耐', '視点の転換', '手放し', '献身'],
+      reversed: ['無駄な犠牲', '遅延', '優柔不断', '執着'],
+    },
+  },
+  {
+    id: 13,
+    name: '死神',
+    nameEn: 'Death',
+    emoji: '🦋',
+    keywords: {
+      upright: ['変容', '終わりと始まり', '再生', '解放'],
+      reversed: ['変化への抵抗', '停滞', '依存', '過去への執着'],
+    },
+  },
+  {
+    id: 14,
+    name: '節制',
+    nameEn: 'Temperance',
+    emoji: '🌈',
+    keywords: {
+      upright: ['調和', 'バランス', '節度', '癒し'],
+      reversed: ['不均衡', '極端', '焦り', '調整不足'],
+    },
+  },
+  {
+    id: 15,
+    name: '悪魔',
+    nameEn: 'The Devil',
+    emoji: '😈',
+    keywords: {
+      upright: ['束縛', '誘惑', '執着', '欲望'],
+      reversed: ['解放', '目覚め', '回復', '束縛からの脱却'],
+    },
+  },
+  {
+    id: 16,
+    name: '塔',
+    nameEn: 'The Tower',
+    emoji: '⚡',
+    keywords: {
+      upright: ['崩壊', '衝撃', '解放', '目覚め'],
+      reversed: ['変化への恐れ', '回避', '延期', '内面的な変革'],
+    },
+  },
+  {
+    id: 17,
+    name: '星',
+    nameEn: 'The Star',
+    emoji: '⭐',
+    keywords: {
+      upright: ['希望', 'インスピレーション', '癒し', '導き'],
+      reversed: ['絶望', '信念の喪失', '失望', '方向性の喪失'],
+    },
+  },
+  {
+    id: 18,
+    name: '月',
+    nameEn: 'The Moon',
+    emoji: '🌕',
+    keywords: {
+      upright: ['不安', '幻想', '直感', '潜在意識'],
+      reversed: ['混乱の解消', '真実', '恐れの克服', '明晰'],
+    },
+  },
+  {
+    id: 19,
+    name: '太陽',
+    nameEn: 'The Sun',
+    emoji: '☀️',
+    keywords: {
+      upright: ['成功', '喜び', '活力', '達成'],
+      reversed: ['一時的な挫折', '自信過剰', '延期', '楽観しすぎ'],
+    },
+  },
+  {
+    id: 20,
+    name: '審判',
+    nameEn: 'Judgement',
+    emoji: '📯',
+    keywords: {
+      upright: ['復活', '覚醒', '決断', '使命'],
+      reversed: ['後悔', '自己批判', '決断力の欠如', '無視'],
+    },
+  },
+  {
+    id: 21,
+    name: '世界',
+    nameEn: 'The World',
+    emoji: '🌍',
+    keywords: {
+      upright: ['完成', '統合', '達成', '新たなステージ'],
+      reversed: ['未完成', '遅延', '中途半端', '満足感の欠如'],
+    },
+  },
+];

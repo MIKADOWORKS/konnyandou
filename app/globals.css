@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-knd-indigo: #0a0620;
+  --color-knd-indigo-light: #1A1A3E;
+  --color-knd-purple: #6B4C9A;
+  --color-knd-lavender: #c8a8ff;
+  --color-knd-gold: #f0d060;
+  --color-knd-pink: #e8b8c8;
+  --font-display: "Zen Maru Gothic", sans-serif;
+  --font-body: "Noto Sans JP", sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0620;
+  color: #ededed;
+  font-family: var(--font-body);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.card-back-pattern {
+  background: linear-gradient(135deg, #0a0620 0%, #1A1A3E 50%, #0a0620 100%);
+  background-size: 200% 200%;
 }
