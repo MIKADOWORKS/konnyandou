@@ -44,3 +44,47 @@ export function buildZodiacShareText(
   const shortReading = reading.length > 80 ? reading.slice(0, 80) + '…' : reading;
   return `${sign}の今日の運勢 ${stars}\n\n${shortReading}\n\n#こんにゃん堂 #星座占い`;
 }
+
+// --- Dynamic share URL builders ---
+
+export function buildTarotShareUrl(
+  cardName: string,
+  cardNameEn: string,
+  cardEmoji: string,
+  isReversed: boolean
+): string {
+  const params = new URLSearchParams({
+    type: 'tarot',
+    card: cardName,
+    en: cardNameEn,
+    emoji: cardEmoji,
+    rev: isReversed ? '1' : '0',
+  });
+  return `${SITE_URL}/share?${params.toString()}`;
+}
+
+export function buildSpreadShareUrl(
+  cards: { name: string; emoji: string; isReversed: boolean }[]
+): string {
+  const params = new URLSearchParams({ type: 'spread' });
+  cards.forEach((card, i) => {
+    params.set(`c${i}`, card.name);
+    params.set(`e${i}`, card.emoji);
+    params.set(`r${i}`, card.isReversed ? '1' : '0');
+  });
+  return `${SITE_URL}/share?${params.toString()}`;
+}
+
+export function buildZodiacShareUrl(
+  sign: string,
+  signIcon: string,
+  overallStars: number
+): string {
+  const params = new URLSearchParams({
+    type: 'zodiac',
+    sign,
+    icon: signIcon,
+    stars: String(overallStars),
+  });
+  return `${SITE_URL}/share?${params.toString()}`;
+}

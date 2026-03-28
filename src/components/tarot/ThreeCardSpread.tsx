@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { saveToHistory } from '@/lib/history';
 import ShareButtons from '@/components/ShareButtons';
+import { buildSpreadShareUrl } from '@/lib/share';
 import ReadingBubble from './ReadingBubble';
 import LoadingIndicator from './LoadingIndicator';
 import { CardPosition, DrawnCard, SPREAD_POSITIONS, drawRandomCard } from './utils';
@@ -235,7 +236,10 @@ export default function ThreeCardSpread() {
         <div className="animate-fadeSlideIn">
           <ReadingBubble reading={reading} />
           <div className="mt-4">
-            <ShareButtons text={shareText} url="https://konnyandou-buc7.vercel.app/tarot" />
+            <ShareButtons
+              text={shareText}
+              url={buildSpreadShareUrl(drawnCards.map((d) => ({ name: d.card.name, emoji: d.card.emoji, isReversed: d.isReversed })))}
+            />
           </div>
           <div className="flex gap-2.5 mt-3">
             <button

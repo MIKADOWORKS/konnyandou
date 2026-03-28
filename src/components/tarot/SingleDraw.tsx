@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { TarotCard as TarotCardType } from '@/types/tarot';
-import { buildTarotShareText } from '@/lib/share';
+import { buildTarotShareText, buildTarotShareUrl } from '@/lib/share';
 import { saveToHistory } from '@/lib/history';
 import ShareButtons from '@/components/ShareButtons';
 import RevealedCard from './RevealedCard';
@@ -168,7 +168,7 @@ export default function SingleDraw() {
           <div className="mt-4">
             <ShareButtons
               text={buildTarotShareText(selectedCard.name, selectedCard.nameEn, isReversed, reading)}
-              url="https://konnyandou-buc7.vercel.app/tarot"
+              url={buildTarotShareUrl(selectedCard.name, selectedCard.nameEn, selectedCard.emoji, isReversed)}
             />
           </div>
           <div className="flex gap-2.5 mt-3">
