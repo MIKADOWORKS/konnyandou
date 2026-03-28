@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { majorArcana } from '@/lib/tarot-data';
+import { callClaude, callClaudeStream } from '@/lib/claude';
 
 const NOA_CHAT_SYSTEM_PROMPT = `あなたは「ノア」です。こんにゃん堂のAI占いフレンドとして、ユーザーとチャットで会話します。
 
@@ -26,53 +27,84 @@ const NOA_CHAT_SYSTEM_PROMPT = `あなたは「ノア」です。こんにゃん
 - 医療・法律・投資のアドバイス
 - 自分がAIであることを前面に出す`;
 
+function buildSystemPrompt(): string {
+  const card = majorArcana[Math.floor(Math.random() * majorArcana.length)];
+  const isReversed = Math.random() > 0.5;
+  const position = isReversed ? '逆位置' : '正位置';
+  const keywords = isReversed ? card.keywords.reversed : card.keywords.upright;
+  return `${NOA_CHAT_SYSTEM_PROMPT}\n\n【今回引いたカード】「${card.name}」（${card.nameEn}）${position}\n【キーワード】${keywords.join('、')}`;
+}
+
+function buildMessages(
+  history: { from: string; text: string }[] | undefined,
+  message: string
+): { role: 'user' | 'assistant'; content: string }[] {
+  const conversationHistory = (history || []).map(
+    (msg: { from: string; text: string }) => ({
+      role: (msg.from === 'user' ? 'user' : 'assistant') as
+        | 'user'
+        | 'assistant',
+      content: msg.text,
+    })
+  );
+  conversationHistory.push({ role: 'user', content: message });
+  return conversationHistory;
+}
+
+// ストリーミング対応: stream=true クエリパラメータで切り替え
 export async function POST(req: NextRequest) {
   try {
-    const { message, history } = await req.json();
+    const { message, history, stream } = await req.json();
+    const systemPrompt = buildSystemPrompt();
+    const messages = buildMessages(history, message);
 
-    // Pick a random card for context
-    const card = majorArcana[Math.floor(Math.random() * majorArcana.length)];
-    const isReversed = Math.random() > 0.5;
-    const position = isReversed ? '逆位置' : '正位置';
-    const keywords = isReversed ? card.keywords.reversed : card.keywords.upright;
+    // ストリーミングモード
+    if (stream) {
+      const encoder = new TextEncoder();
+      const readable = new ReadableStream({
+        async start(controller) {
+          try {
+            const gen = callClaudeStream(systemPrompt, messages, {
+              maxTokens: 400,
+            });
+            for await (const chunk of gen) {
+              // SSE形式: data: <text>\n\n
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ text: chunk })}\n\n`)
+              );
+            }
+            // 完了シグナル
+            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+            controller.close();
+          } catch {
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ error: 'ごめんね、ちょっと電波が不安定みたい…\u{1F431} もう一回聞いてみて！' })}\n\n`
+              )
+            );
+            controller.close();
+          }
+        },
+      });
 
-    const conversationHistory = (history || []).map(
-      (msg: { from: string; text: string }) => ({
-        role: msg.from === 'user' ? 'user' : 'assistant',
-        content: msg.text,
-      })
-    );
-
-    conversationHistory.push({
-      role: 'user',
-      content: message,
-    });
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 400,
-        system: `${NOA_CHAT_SYSTEM_PROMPT}\n\n【今回引いたカード】「${card.name}」（${card.nameEn}）${position}\n【キーワード】${keywords.join('、')}`,
-        messages: conversationHistory,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
+      return new Response(readable, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      });
     }
 
-    const data = await response.json();
-    return NextResponse.json({ reply: data.content[0].text });
+    // 非ストリーミングモード（後方互換）
+    const reply = await callClaude(systemPrompt, messages, { maxTokens: 400 });
+    return NextResponse.json({ reply });
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
-      { reply: 'ごめんね、ちょっと電波が不安定みたい…🐱 もう一回聞いてみて！' },
+      {
+        reply: 'ごめんね、ちょっと電波が不安定みたい…\u{1F431} もう一回聞いてみて！',
+      },
       { status: 200 }
     );
   }
