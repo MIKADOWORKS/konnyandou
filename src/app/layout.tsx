@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import BottomTabNav from '@/components/BottomTabNav';
+import { SITE_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'こんにゃん堂 | AIフレンド・ノアとツキのタロット占い',
   description:
     'AIフレンド・ノアと白猫の使い魔ツキが、タロットであなたの毎日にヒントをお届け。こんにゃん出ましたけど〜！',
