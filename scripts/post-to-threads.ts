@@ -109,12 +109,20 @@ async function main() {
   const ranking = buildRankingPost(data.posts, dateShort);
   const individuals = data.posts.map((p) => buildIndividualPost(p, dateShort));
 
+  const closing = `こんにゃん出ましたけど〜！🔮
+
+今日もみんなにとっていい日になりますように✨
+気になる星座があったらリプで教えてね！
+
+#こんにゃん堂 #ノア`;
+
   const allPosts = [
     { label: '📊 ランキング', text: ranking },
     ...individuals.map((text, i) => ({
       label: `${data.posts[i].icon} ${data.posts[i].sign}`,
       text,
     })),
+    { label: '🐱 締め', text: closing },
   ];
 
   if (dryRun) {
