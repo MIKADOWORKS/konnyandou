@@ -8,20 +8,12 @@
  *   npx tsx scripts/generate-daily-horoscope.ts --out output/
  */
 
+import './lib/env';
 import Anthropic from '@anthropic-ai/sdk';
 import * as fs from 'fs';
 import * as path from 'path';
-
-// .env.local を読み込む
-const envPath = path.resolve(process.cwd(), '.env.local');
-if (fs.existsSync(envPath)) {
-  for (const line of fs.readFileSync(envPath, 'utf-8').split('\n')) {
-    const match = line.match(/^([^#=]+)=(.*)$/);
-    if (match && !process.env[match[1].trim()]) {
-      process.env[match[1].trim()] = match[2].trim();
-    }
-  }
-}
+import type { ZodiacPost } from './lib/types';
+import { buildIndividualPost, buildRankingPost } from './lib/format';
 
 // ── 設定 ──
 
@@ -44,15 +36,6 @@ const ZODIAC_SIGNS = [
 ] as const;
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
-
-interface ZodiacPost {
-  sign: string;
-  icon: string;
-  stars: number;
-  message: string;
-  luckyColor: string;
-  tsukiComment: string;
-}
 
 // ── プロンプト ──
 
@@ -97,38 +80,6 @@ JSON以外の文字は含めないでください。
 - 各星座の性格特性に合ったアドバイスにする
 - ツキのコメントは毎回違うものにする（短く、猫っぽく）
 - messageは必ずポジティブな要素を含める`;
-}
-
-// ── 投稿テキスト組み立て ──
-
-function buildIndividualPost(data: ZodiacPost, dateShort: string): string {
-  const stars = '★'.repeat(data.stars) + '☆'.repeat(5 - data.stars);
-  return `${data.icon} ${data.sign}さん ${dateShort}の運勢 ${stars}
-
-${data.message}
-
-🎨 ラッキーカラー：${data.luckyColor}
-🐱 ツキ：「${data.tsukiComment}」
-
-#今日の運勢 #${data.sign} #こんにゃん堂`;
-}
-
-function buildRankingPost(posts: ZodiacPost[], dateShort: string): string {
-  const sorted = [...posts].sort((a, b) => b.stars - a.stars);
-  const medals = ['🥇', '🥈', '🥉'];
-
-  const lines = sorted.map((p, i) => {
-    const prefix = i < 3 ? medals[i] : `${i + 1}位`;
-    const stars = '★'.repeat(p.stars) + '☆'.repeat(5 - p.stars);
-    return `${prefix} ${p.icon}${p.sign} ${stars}`;
-  });
-
-  return `🔮 ${dateShort} 星座運勢ランキング！
-
-${lines.join('\n')}
-
-各星座の詳しい運勢はリプ欄で✨
-#今日の運勢 #星座占い #こんにゃん堂`;
 }
 
 // ── メイン ──
