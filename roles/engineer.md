@@ -34,9 +34,10 @@
 ## 現在のタスク
 - [完了] Sprint 0: SITE_URL統一、フォント修正、APIキーチェック
 - [完了] Sprint 1: 入力バリデーション（Zod）、レート制限、API共通化、プロンプト集約
-- [待機] Sprint 1: アナリティクス導入（Vercel Analytics + GA4）
-- [待機] Sprint 2: 未使用コンポーネント削除、tarot/page.tsx分割
+- [完了] Sprint 2: 未使用コンポーネント削除、tarot/page.tsx分割
+- [待機] アナリティクス導入（Vercel Analytics + GA4）
 - [待機] Sprint 3: sitemap.xml、robots.txt、各ページmetadata
+- [待機] NoaMessage.tsx確認→framer-motion依存整理
 
 ## 連携先
 - **プロトエンジニア:** PoCコードのプロダクション化を引き受ける
