@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Zen_Maru_Gothic, Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
 import BottomTabNav from '@/components/BottomTabNav';
+import { SITE_URL } from '@/lib/constants';
 
 const zenMaruGothic = Zen_Maru_Gothic({
   weight: ['400', '500', '700'],
@@ -17,6 +18,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'こんにゃん堂 | AIフレンド・ノアとツキのタロット占い',
   description:
     'AIフレンド・ノアと白猫の使い魔ツキが、タロットであなたの毎日にヒントをお届け。こんにゃん出ましたけど〜！',
