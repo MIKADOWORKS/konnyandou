@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { callClaude } from '@/lib/claude';
+import { callClaude, callClaudeStream } from '@/lib/claude';
 import { NOA_CHAT_SYSTEM_PROMPT } from '@/lib/prompts';
 import { majorArcana } from '@/lib/tarot-data';
 import { rateLimit } from '@/lib/rate-limit';
@@ -19,7 +19,28 @@ const ChatRequestSchema = z.object({
     .max(MAX_HISTORY_LENGTH, `履歴は最大${MAX_HISTORY_LENGTH}件までです`)
     .optional()
     .default([]),
+  stream: z.boolean().optional().default(false),
 });
+
+function buildSystemPrompt(): string {
+  const card = majorArcana[Math.floor(Math.random() * majorArcana.length)];
+  const isReversed = Math.random() > 0.5;
+  const position = isReversed ? '逆位置' : '正位置';
+  const keywords = isReversed ? card.keywords.reversed : card.keywords.upright;
+  return `${NOA_CHAT_SYSTEM_PROMPT}\n\n【今回引いたカード】「${card.name}」（${card.nameEn}）${position}\n【キーワード】${keywords.join('、')}`;
+}
+
+function buildMessages(
+  history: { from: string; text: string }[],
+  message: string
+): { role: 'user' | 'assistant'; content: string }[] {
+  const conversationHistory = history.map((msg) => ({
+    role: (msg.from === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+    content: msg.text,
+  }));
+  conversationHistory.push({ role: 'user', content: message });
+  return conversationHistory;
+}
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
@@ -42,29 +63,52 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { message, history } = parsed.data;
+    const { message, history, stream } = parsed.data;
+    const systemPrompt = buildSystemPrompt();
+    const messages = buildMessages(history, message);
 
-    // Pick a random card for context
-    const card = majorArcana[Math.floor(Math.random() * majorArcana.length)];
-    const isReversed = Math.random() > 0.5;
-    const position = isReversed ? '逆位置' : '正位置';
-    const keywords = isReversed ? card.keywords.reversed : card.keywords.upright;
+    // ストリーミングモード
+    if (stream) {
+      const encoder = new TextEncoder();
+      const readable = new ReadableStream({
+        async start(controller) {
+          try {
+            const gen = callClaudeStream({
+              system: systemPrompt,
+              messages,
+              maxTokens: 400,
+            });
+            for await (const chunk of gen) {
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ text: chunk })}\n\n`)
+              );
+            }
+            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+            controller.close();
+          } catch {
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ error: 'ごめんね、ちょっと電波が不安定みたい…🐱 もう一回聞いてみて！' })}\n\n`
+              )
+            );
+            controller.close();
+          }
+        },
+      });
 
-    const conversationHistory = history.map((msg) => ({
-      role: msg.from === 'user' ? ('user' as const) : ('assistant' as const),
-      content: msg.text,
-    }));
+      return new Response(readable, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      });
+    }
 
-    conversationHistory.push({
-      role: 'user',
-      content: message,
-    });
-
-    const systemPrompt = `${NOA_CHAT_SYSTEM_PROMPT}\n\n【今回引いたカード】「${card.name}」（${card.nameEn}）${position}\n【キーワード】${keywords.join('、')}`;
-
+    // 非ストリーミングモード（後方互換）
     const reply = await callClaude({
       system: systemPrompt,
-      messages: conversationHistory,
+      messages,
       maxTokens: 400,
     });
 
@@ -72,7 +116,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
-      { reply: 'ごめんね、ちょっと電波が不安定みたい…🐱 もう一回聞いてみて！' },
+      {
+        reply: 'ごめんね、ちょっと電波が不安定みたい…🐱 もう一回聞いてみて！',
+      },
       { status: 200 }
     );
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import NoaAvatar from '@/components/NoaAvatar';
 
 interface Message {
@@ -12,23 +12,25 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       from: 'noa',
-      text: 'ねえねえ、何か気になることある？ 恋愛でも仕事でも、なんでも聞いてね！カード引いてあげるよ✨',
+      text: 'ねえねえ、何か気になることある？ 恋愛でも仕事でも、なんでも聞いてね！カード引いてあげるよ\u2728',
     },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, streamingText]);
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!input.trim() || isTyping) return;
     const userMsg = input.trim();
     setInput('');
     setMessages((prev) => [...prev, { from: 'user', text: userMsg }]);
     setIsTyping(true);
+    setStreamingText('');
 
     try {
       const res = await fetch('/api/chat', {
@@ -37,25 +39,85 @@ export default function ChatPage() {
         body: JSON.stringify({
           message: userMsg,
           history: messages.slice(-10),
+          stream: true,
         }),
       });
 
       if (!res.ok) throw new Error('API error');
 
-      const data = await res.json();
-      setIsTyping(false);
-      setMessages((prev) => [...prev, { from: 'noa', text: data.reply }]);
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('No reader');
+
+      const decoder = new TextDecoder();
+      let accumulated = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value, { stream: true });
+        const lines = text.split('\n');
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6);
+
+          if (data === '[DONE]') {
+            // ストリーミング完了 - 蓄積テキストをメッセージに追加
+            const finalText = accumulated;
+            setIsTyping(false);
+            setStreamingText('');
+            setMessages((prev) => [
+              ...prev,
+              { from: 'noa', text: finalText },
+            ]);
+            return;
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.error) {
+              setIsTyping(false);
+              setStreamingText('');
+              setMessages((prev) => [
+                ...prev,
+                { from: 'noa', text: parsed.error },
+              ]);
+              return;
+            }
+            if (parsed.text) {
+              accumulated += parsed.text;
+              setStreamingText(accumulated);
+            }
+          } catch {
+            // JSON parse error - skip
+          }
+        }
+      }
+
+      // reader が done になった場合（[DONE] なしで終了）
+      if (accumulated) {
+        setIsTyping(false);
+        setStreamingText('');
+        setMessages((prev) => [
+          ...prev,
+          { from: 'noa', text: accumulated },
+        ]);
+      } else {
+        throw new Error('Empty response');
+      }
     } catch {
       setIsTyping(false);
+      setStreamingText('');
       setMessages((prev) => [
         ...prev,
         {
           from: 'noa',
-          text: 'ごめんね、ちょっと電波が不安定みたい…🐱 もう一回聞いてみて！',
+          text: 'ごめんね、ちょっと電波が不安定みたい…\u{1F431} もう一回聞いてみて！',
         },
       ]);
     }
-  };
+  }, [input, isTyping, messages]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -66,7 +128,9 @@ export default function ChatPage() {
           <div className="text-[15px] text-knd-lavender font-display font-medium">
             Noa
           </div>
-          <div className="text-[10px] text-knd-lavender/40">● オンライン</div>
+          <div className="text-[10px] text-knd-lavender/40">
+            {isTyping ? '\u{270D}\uFE0F 入力中...' : '\u25CF オンライン'}
+          </div>
         </div>
       </div>
 
@@ -105,7 +169,25 @@ export default function ChatPage() {
           </div>
         ))}
 
-        {isTyping && (
+        {/* ストリーミング中のメッセージ表示 */}
+        {isTyping && streamingText && (
+          <div className="flex items-end gap-2 animate-fadeSlideIn">
+            <NoaAvatar size={32} borderColor="rgba(240, 208, 96, 0.2)" />
+            <div
+              className="max-w-[75%] px-3.5 py-2.5 text-[13.5px] leading-[1.7] text-[#d8d0e8] font-body whitespace-pre-wrap border"
+              style={{
+                borderRadius: '4px 14px 14px 14px',
+                background: 'rgba(40, 25, 80, 0.6)',
+                borderColor: 'rgba(180, 150, 255, 0.1)',
+              }}
+            >
+              {streamingText}
+            </div>
+          </div>
+        )}
+
+        {/* タイピングインジケータ（テキストがまだ来ていない時） */}
+        {isTyping && !streamingText && (
           <div className="flex items-end gap-2">
             <NoaAvatar size={32} borderColor="rgba(240, 208, 96, 0.2)" />
             <div className="px-4.5 py-2.5 rounded-tr-[14px] rounded-br-[14px] rounded-bl-[14px] rounded-tl bg-[rgba(40,25,80,0.6)] border border-knd-lavender/10 flex gap-[5px]">
@@ -144,7 +226,7 @@ export default function ChatPage() {
             cursor: input.trim() ? 'pointer' : 'default',
           }}
         >
-          ↑
+          \u2191
         </button>
       </div>
     </div>

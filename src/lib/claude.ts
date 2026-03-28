@@ -3,73 +3,89 @@
  * 全APIルートはこのモジュール経由でClaudeを呼び出す
  */
 
+import Anthropic from '@anthropic-ai/sdk';
+
 import {
   NOA_TAROT_SYSTEM_PROMPT,
   NOA_SPREAD_SYSTEM_PROMPT,
 } from '@/lib/prompts';
 
-interface ClaudeMessage {
-  role: 'user' | 'assistant';
-  content: string;
-}
+// --- Anthropic SDK client (singleton) ---
+let _client: Anthropic | null = null;
 
-interface ClaudeResponse {
-  content: Array<{ text: string }>;
-}
-
-/** 共通のClaude API呼び出し */
-export async function callClaude(options: {
-  system: string;
-  messages: ClaudeMessage[];
-  maxTokens?: number;
-  model?: string;
-}): Promise<string> {
-  const {
-    system,
-    messages,
-    maxTokens = 600,
-    model = 'claude-haiku-4-5-20251001',
-  } = options;
-
+function getClient(): Anthropic {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error(
       'ANTHROPIC_API_KEY 環境変数が設定されていません。Vercel の Environment Variables または .env.local に設定してください。'
     );
   }
+  if (!_client) {
+    _client = new Anthropic({ apiKey });
+  }
+  return _client;
+}
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000); // 30秒タイムアウト
+const MODEL = 'claude-haiku-4-5-20251001';
 
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: maxTokens,
-        system,
-        messages,
-      }),
-      signal: controller.signal,
-    });
+// --- 型定義 ---
+interface ClaudeMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
-    if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
+// --- callClaude: 汎用の非ストリーミング呼び出し ---
+export async function callClaude(options: {
+  system: string;
+  messages: ClaudeMessage[];
+  maxTokens?: number;
+  model?: string;
+}): Promise<string> {
+  const { system, messages, maxTokens = 600, model = MODEL } = options;
+  const client = getClient();
+
+  const response = await client.messages.create({
+    model,
+    max_tokens: maxTokens,
+    system,
+    messages,
+  });
+
+  const block = response.content[0];
+  if (block.type === 'text') {
+    return block.text;
+  }
+  throw new Error('Unexpected response content type');
+}
+
+// --- callClaudeStream: ストリーミング呼び出し ---
+export async function* callClaudeStream(options: {
+  system: string;
+  messages: ClaudeMessage[];
+  maxTokens?: number;
+  model?: string;
+}): AsyncGenerator<string, void, unknown> {
+  const { system, messages, maxTokens = 600, model = MODEL } = options;
+  const client = getClient();
+
+  const stream = client.messages.stream({
+    model,
+    max_tokens: maxTokens,
+    system,
+    messages,
+  });
+
+  for await (const event of stream) {
+    if (
+      event.type === 'content_block_delta' &&
+      event.delta.type === 'text_delta'
+    ) {
+      yield event.delta.text;
     }
-
-    const data: ClaudeResponse = await response.json();
-    return data.content[0].text;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 
-/** タロット1枚引き */
+// --- 既存インターフェース維持: getReading ---
 export async function getReading(
   card: {
     name: string;
@@ -91,6 +107,7 @@ export async function getReading(
   });
 }
 
+// --- 既存インターフェース維持: getSpreadReading ---
 export interface SpreadCard {
   name: string;
   nameEn: string;
@@ -99,7 +116,6 @@ export interface SpreadCard {
   position: string;
 }
 
-/** タロット3枚スプレッド */
 export async function getSpreadReading(
   cards: SpreadCard[],
   question: string
