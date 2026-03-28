@@ -1,4 +1,4 @@
-const SITE_URL = 'https://konnyandou-buc7.vercel.app';
+import { SITE_URL } from './constants';
 
 interface ShareParams {
   text: string;

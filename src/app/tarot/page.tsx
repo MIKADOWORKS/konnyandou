@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { majorArcana } from '@/lib/tarot-data';
 import { TarotCard as TarotCardType } from '@/types/tarot';
 import { buildTarotShareText } from '@/lib/share';
+import { SITE_URL } from '@/lib/constants';
 import { saveToHistory } from '@/lib/history';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
@@ -190,7 +191,7 @@ function SingleDraw() {
           <div className="mt-4">
             <ShareButtons
               text={buildTarotShareText(selectedCard.name, selectedCard.nameEn, isReversed, reading)}
-              url="https://konnyandou-buc7.vercel.app/tarot"
+              url={`${SITE_URL}/tarot`}
             />
           </div>
           <div className="flex gap-2.5 mt-3">
@@ -436,7 +437,7 @@ function ThreeCardSpread() {
         <div className="animate-fadeSlideIn">
           <ReadingBubble reading={reading} />
           <div className="mt-4">
-            <ShareButtons text={shareText} url="https://konnyandou-buc7.vercel.app/tarot" />
+            <ShareButtons text={shareText} url={`${SITE_URL}/tarot`} />
           </div>
           <div className="flex gap-2.5 mt-3">
             <button

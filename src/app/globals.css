@@ -7,8 +7,8 @@
   --color-knd-lavender: #c8a8ff;
   --color-knd-gold: #f0d060;
   --color-knd-pink: #e8b8c8;
-  --font-display: "Zen Maru Gothic", sans-serif;
-  --font-body: "Noto Sans JP", sans-serif;
+  --font-display: var(--font-zen-maru), "Zen Maru Gothic", sans-serif;
+  --font-body: var(--font-noto-sans), "Noto Sans JP", sans-serif;
 }
 
 body {

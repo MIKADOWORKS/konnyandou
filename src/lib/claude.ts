@@ -1,3 +1,13 @@
+export function getAnthropicApiKey(): string {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) {
+    throw new Error(
+      'ANTHROPIC_API_KEY 環境変数が設定されていません。Vercel の Environment Variables または .env.local に設定してください。'
+    );
+  }
+  return key;
+}
+
 const NOA_SYSTEM_PROMPT = `あなたは「ノア」です。こんにゃん堂のAI占いフレンドとして、タロット占いの結果を解釈します。
 
 ## ノアのキャラクター
@@ -35,7 +45,7 @@ export async function getReading(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY!,
+      'x-api-key': getAnthropicApiKey(),
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
@@ -112,7 +122,7 @@ export async function getSpreadReading(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY!,
+      'x-api-key': getAnthropicApiKey(),
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({

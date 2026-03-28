@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAnthropicApiKey } from '@/lib/claude';
 
 const NOA_ZODIAC_SYSTEM_PROMPT = `あなたは「ノア」です。こんにゃん堂のAI占いフレンドとして、星座占いの結果を伝えます。
 
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
+        'x-api-key': getAnthropicApiKey(),
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({

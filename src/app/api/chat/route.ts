@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { majorArcana } from '@/lib/tarot-data';
+import { getAnthropicApiKey } from '@/lib/claude';
 
 const NOA_CHAT_SYSTEM_PROMPT = `あなたは「ノア」です。こんにゃん堂のAI占いフレンドとして、ユーザーとチャットで会話します。
 
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
+        'x-api-key': getAnthropicApiKey(),
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
