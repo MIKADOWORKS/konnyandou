@@ -65,6 +65,10 @@
 | `src/components/*.tsx` | エンジニア | |
 | `src/app/globals.css` | アートディレクター（デザイントークン）/ エンジニア（実装） | |
 | `public/images/` | アートディレクター | |
+| `scripts/*-horoscope.ts` | エンジニア（ロジック）/ ライター（プロンプト） | |
+| `scripts/post-noa-chat.ts` | エンジニア（ロジック）/ ライター（プロンプト） | |
+| `scripts/*-weekly-content.ts` | エンジニア（ロジック）/ ライター（プロンプト） | |
+| `scripts/lib/format.ts` | ライター（文面）/ エンジニア（コード） | |
 | `docs/` | 全ロール（自分の担当領域のドキュメント） | |
 | `roles/*.md` | ディレクター | |
 

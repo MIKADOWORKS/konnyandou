@@ -48,6 +48,7 @@
 | アートディレクター | roles/art-director.md | UI/UX・ビジュアル・ブランディング |
 | マーケティング | roles/marketing.md | 集客・SEO・SNS・収益化 |
 | リサーチャー | roles/researcher.md | 市場調査・競合分析・ユーザー調査 |
+| ライター | roles/writer.md | コピーライティング・キャラボイス管理・SNS文面 |
 
 ## 共通ルール
 
