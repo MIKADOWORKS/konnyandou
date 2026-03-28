@@ -16,16 +16,16 @@ export function buildRankingPost(posts: ZodiacPost[], dateShort: string): string
   const sorted = [...posts].sort((a, b) => b.stars - a.stars);
   const medals = ['🥇', '🥈', '🥉'];
 
+  // X の280文字制限に収まるよう、星表示を省略してコンパクトに
   const lines = sorted.map((p, i) => {
-    const prefix = i < 3 ? medals[i] : `${i + 1}位`;
-    const stars = '★'.repeat(p.stars) + '☆'.repeat(5 - p.stars);
-    return `${prefix} ${p.icon}${p.sign} ${stars}`;
+    const prefix = i < 3 ? medals[i] : `${String(i + 1).padStart(2, ' ')}`;
+    return `${prefix}${p.icon}${p.sign}`;
   });
 
-  return `🔮 ${dateShort} 星座運勢ランキング！
+  return `🔮${dateShort} 運勢ランキング
 
 ${lines.join('\n')}
 
-各星座の詳しい運勢はリプ欄で✨
-#今日の運勢 #星座占い #こんにゃん堂`;
+詳しい運勢はリプ欄で✨
+#今日の運勢 #こんにゃん堂`;
 }
