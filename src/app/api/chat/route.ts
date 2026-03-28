@@ -1,35 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { callClaude } from '@/lib/claude';
+import { NOA_CHAT_SYSTEM_PROMPT } from '@/lib/prompts';
 import { majorArcana } from '@/lib/tarot-data';
-import { getAnthropicApiKey } from '@/lib/claude';
+import { rateLimit } from '@/lib/rate-limit';
 
-const NOA_CHAT_SYSTEM_PROMPT = `あなたは「ノア」です。こんにゃん堂のAI占いフレンドとして、ユーザーとチャットで会話します。
+const MAX_HISTORY_LENGTH = 20;
 
-## ノアのキャラクター
-- 20代前半の女の子。占い師ではなく「占い好きの友達」
-- 明るく、共感力が高い。タロットの知識はガチで本格的
-- タメ口ベースで親しみやすい口調。絵文字はたまに使う程度（1-2個/メッセージ）
-- 馴れ馴れしすぎない、ちょうどいい距離感
-- 相棒の白猫「ツキ」がいる
+const ChatMessageSchema = z.object({
+  from: z.enum(['user', 'noa']),
+  text: z.string().min(1).max(2000),
+});
 
-## 応答ルール
-- ユーザーの相談に対して、タロットカードを1枚引いてアドバイスする
-- カード名は「」で囲み、正位置/逆位置を明記する
-- 悪い結果でもポジティブに変換し、具体的な行動アドバイスを添える
-- 回答は150〜200文字程度でコンパクトに
-- 占星術の専門用語は使わず、わかりやすい言葉で伝える
-- 雑談にも自然に対応しつつ、占いに話を繋げる
-- 決めゼリフ「こんにゃん出ましたけど〜」を適度に使う
-
-## 禁止事項
-- 「占い師として」「鑑定結果は」等のフォーマルな表現
-- 不安を煽る表現
-- 断定的な未来予測（「絶対こうなる」等）
-- 医療・法律・投資のアドバイス
-- 自分がAIであることを前面に出す`;
+const ChatRequestSchema = z.object({
+  message: z.string().min(1, 'メッセージを入力してください').max(500, 'メッセージが長すぎます'),
+  history: z
+    .array(ChatMessageSchema)
+    .max(MAX_HISTORY_LENGTH, `履歴は最大${MAX_HISTORY_LENGTH}件までです`)
+    .optional()
+    .default([]),
+});
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+  const limit = rateLimit(ip);
+  if (!limit.success) {
+    return NextResponse.json(
+      { error: 'リクエストが多すぎます。しばらくしてからお試しください。' },
+      { status: 429 }
+    );
+  }
+
   try {
-    const { message, history } = await req.json();
+    const body = await req.json();
+    const parsed = ChatRequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: '入力内容に不備があります。', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+
+    const { message, history } = parsed.data;
 
     // Pick a random card for context
     const card = majorArcana[Math.floor(Math.random() * majorArcana.length)];
@@ -37,39 +50,25 @@ export async function POST(req: NextRequest) {
     const position = isReversed ? '逆位置' : '正位置';
     const keywords = isReversed ? card.keywords.reversed : card.keywords.upright;
 
-    const conversationHistory = (history || []).map(
-      (msg: { from: string; text: string }) => ({
-        role: msg.from === 'user' ? 'user' : 'assistant',
-        content: msg.text,
-      })
-    );
+    const conversationHistory = history.map((msg) => ({
+      role: msg.from === 'user' ? ('user' as const) : ('assistant' as const),
+      content: msg.text,
+    }));
 
     conversationHistory.push({
       role: 'user',
       content: message,
     });
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': getAnthropicApiKey(),
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 400,
-        system: `${NOA_CHAT_SYSTEM_PROMPT}\n\n【今回引いたカード】「${card.name}」（${card.nameEn}）${position}\n【キーワード】${keywords.join('、')}`,
-        messages: conversationHistory,
-      }),
+    const systemPrompt = `${NOA_CHAT_SYSTEM_PROMPT}\n\n【今回引いたカード】「${card.name}」（${card.nameEn}）${position}\n【キーワード】${keywords.join('、')}`;
+
+    const reply = await callClaude({
+      system: systemPrompt,
+      messages: conversationHistory,
+      maxTokens: 400,
     });
 
-    if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return NextResponse.json({ reply: data.content[0].text });
+    return NextResponse.json({ reply });
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
