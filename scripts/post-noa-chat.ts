@@ -154,6 +154,8 @@ async function postToThreads(text: string): Promise<string> {
   const createRes = await fetch(`https://graph.threads.net/v1.0/${userId}/threads`, { method: 'POST', body: createParams });
   const { id: containerId } = (await createRes.json()) as { id: string };
 
+  await sleep(5000);
+
   const publishParams = new URLSearchParams({ creation_id: containerId, access_token: token });
   const publishRes = await fetch(`https://graph.threads.net/v1.0/${userId}/threads_publish`, { method: 'POST', body: publishParams });
   const { id: postId } = (await publishRes.json()) as { id: string };

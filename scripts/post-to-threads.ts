@@ -66,7 +66,10 @@ async function createThreadsPost(
   }
   const { id: containerId } = (await createRes.json()) as { id: string };
 
-  // Step 2: 公開
+  // Step 2: コンテナ処理待ち（Threads APIはコンテナ作成後に処理時間が必要）
+  await sleep(5000);
+
+  // Step 3: 公開
   const publishParams = new URLSearchParams({
     creation_id: containerId,
     access_token: accessToken,
