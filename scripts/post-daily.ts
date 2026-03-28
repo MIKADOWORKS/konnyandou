@@ -87,6 +87,11 @@ function main() {
     run(threadsCmd, 'Threads 投稿');
   }
 
+  // Step 4: 週間企画コンテンツ投稿
+  const platformFlag = xOnly ? ' --x-only' : threadsOnly ? ' --threads-only' : '';
+  const weeklyCmd = `npx tsx scripts/post-weekly-content.ts --date ${dateStr}${dryFlag}${platformFlag}`;
+  run(weeklyCmd, '週間企画コンテンツ');
+
   console.error('\n🎉 全工程完了！');
 }
 
