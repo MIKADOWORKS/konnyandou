@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { majorArcana } from '@/lib/tarot-data';
 import { TarotCard as TarotCardType } from '@/types/tarot';
 import { buildTarotShareText } from '@/lib/share';
+import { saveToHistory } from '@/lib/history';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 import NoaAvatar from '@/components/NoaAvatar';
@@ -74,6 +75,7 @@ function SingleDraw() {
       setPhase('reveal');
       await new Promise((r) => setTimeout(r, 1200));
       setPhase('loading');
+      let readingText = '';
       try {
         const res = await fetch('/api/tarot', {
           method: 'POST',
@@ -86,13 +88,23 @@ function SingleDraw() {
         });
         if (!res.ok) throw new Error('API error');
         const data = await res.json();
-        setReading(data.reading);
+        readingText = data.reading;
+        setReading(readingText);
       } catch {
-        setReading(
-          'こんにゃん出ましたけど〜！ごめんね、ちょっとツキの電波が不安定みたい…🐱 もう一回試してみて！…ってことで、こんなんどう？'
-        );
+        readingText =
+          'こんにゃん出ましたけど〜！ごめんね、ちょっとツキの電波が不安定みたい…🐱 もう一回試してみて！…ってことで、こんなんどう？';
+        setReading(readingText);
       }
       setPhase('result');
+      saveToHistory({
+        type: 'tarot-single',
+        reading: readingText,
+        cardName: card.name,
+        cardNameEn: card.nameEn,
+        cardEmoji: card.emoji,
+        isReversed: reversed,
+        question: question || undefined,
+      });
     },
     [phase, question]
   );
@@ -258,6 +270,7 @@ function ThreeCardSpread() {
 
   const fetchReading = async (cards: DrawnCard[]) => {
     setPhase('loading');
+    let readingText = '';
     try {
       const res = await fetch('/api/tarot/spread', {
         method: 'POST',
@@ -273,14 +286,26 @@ function ThreeCardSpread() {
       });
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
-      setReading(data.reading);
+      readingText = data.reading;
+      setReading(readingText);
     } catch {
-      setReading(
-        'こんにゃん出ましたけど〜！ごめんね、ちょっとツキの電波が不安定みたい…🐱 もう一回試してみて！…ってことで、こんなんどう？'
-      );
+      readingText =
+        'こんにゃん出ましたけど〜！ごめんね、ちょっとツキの電波が不安定みたい…🐱 もう一回試してみて！…ってことで、こんなんどう？';
+      setReading(readingText);
     }
     setRevealedCount(3);
     setPhase('result');
+    saveToHistory({
+      type: 'tarot-spread',
+      reading: readingText,
+      question: question || undefined,
+      spreadCards: cards.map((d) => ({
+        position: d.position,
+        cardName: d.card.name,
+        cardEmoji: d.card.emoji,
+        isReversed: d.isReversed,
+      })),
+    });
   };
 
   const reset = useCallback(() => {

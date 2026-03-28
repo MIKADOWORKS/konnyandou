@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ZODIAC, ZodiacSign } from '@/lib/zodiac-data';
 import { buildZodiacShareText } from '@/lib/share';
+import { saveToHistory } from '@/lib/history';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 import NoaAvatar from '@/components/NoaAvatar';
@@ -26,6 +28,14 @@ export default function HomePage() {
     setShowReading(false);
     setIsLoading(true);
 
+    let readingText = '';
+    let overall = 4;
+    let cats = [
+      { label: '恋愛運', stars: 4 },
+      { label: '仕事運', stars: 3 },
+      { label: '金運', stars: 5 },
+    ];
+
     try {
       const res = await fetch('/api/zodiac', {
         method: 'POST',
@@ -36,22 +46,29 @@ export default function HomePage() {
       if (!res.ok) throw new Error('API error');
 
       const data = await res.json();
-      setReading(data.reading);
-      setOverallStars(data.overall);
-      setCategories(data.categories);
+      readingText = data.reading;
+      overall = data.overall;
+      cats = data.categories;
+      setReading(readingText);
+      setOverallStars(overall);
+      setCategories(cats);
     } catch {
-      setReading(
-        '今日は直感がさえてる日！ふと思いついたことをメモしておくと、あとで役立つかも。午後からは人との会話にヒントが隠れてるよ。'
-      );
-      setOverallStars(4);
-      setCategories([
-        { label: '恋愛運', stars: 4 },
-        { label: '仕事運', stars: 3 },
-        { label: '金運', stars: 5 },
-      ]);
+      readingText =
+        '今日は直感がさえてる日！ふと思いついたことをメモしておくと、あとで役立つかも。午後からは人との会話にヒントが隠れてるよ。';
+      setReading(readingText);
+      setOverallStars(overall);
+      setCategories(cats);
     } finally {
       setIsLoading(false);
       setShowReading(true);
+      saveToHistory({
+        type: 'zodiac',
+        reading: readingText,
+        sign: z.sign,
+        signIcon: z.icon,
+        overall,
+        categories: cats,
+      });
     }
   };
 
@@ -213,6 +230,17 @@ export default function HomePage() {
             </div>
           </div>
         )}
+
+        {/* History link */}
+        <div className="mt-6 text-center animate-fadeSlideIn" style={{ animationDelay: '0.6s', animationFillMode: 'backwards' }}>
+          <Link
+            href="/history"
+            className="inline-flex items-center gap-1.5 text-[12px] text-knd-lavender/40 font-body hover:text-knd-lavender/60 transition-colors"
+          >
+            <span>📜</span>
+            <span>鑑定履歴を見る</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
