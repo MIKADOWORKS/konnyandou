@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { ZODIAC, ZodiacSign } from '@/lib/zodiac-data';
+import { buildZodiacShareText } from '@/lib/share';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 import NoaAvatar from '@/components/NoaAvatar';
+import ShareButtons from '@/components/ShareButtons';
 
 export default function HomePage() {
   const [selectedZodiac, setSelectedZodiac] = useState<ZodiacSign | null>(null);
@@ -200,6 +202,14 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Share buttons */}
+            <div className="mt-4 pt-4 border-t border-knd-lavender/10">
+              <ShareButtons
+                text={buildZodiacShareText(selectedZodiac.sign, overallStars, reading)}
+                url="https://konnyandou-buc7.vercel.app"
+              />
             </div>
           </div>
         )}

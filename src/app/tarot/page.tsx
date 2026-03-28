@@ -3,9 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { majorArcana } from '@/lib/tarot-data';
 import { TarotCard as TarotCardType } from '@/types/tarot';
+import { buildTarotShareText } from '@/lib/share';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 import NoaAvatar from '@/components/NoaAvatar';
+import ShareButtons from '@/components/ShareButtons';
 
 type Phase = 'ready' | 'shuffling' | 'pick' | 'reveal' | 'loading' | 'result';
 
@@ -255,8 +257,21 @@ export default function TarotPage() {
               </div>
             </div>
 
+            {/* Share buttons */}
+            <div className="mt-4">
+              <ShareButtons
+                text={buildTarotShareText(
+                  selectedCard.name,
+                  selectedCard.nameEn,
+                  isReversed,
+                  reading
+                )}
+                url="https://konnyandou-buc7.vercel.app/tarot"
+              />
+            </div>
+
             {/* Action buttons */}
-            <div className="flex gap-2.5 mt-4">
+            <div className="flex gap-2.5 mt-3">
               <button
                 onClick={reset}
                 className="flex-1 py-3 bg-knd-purple/30 border border-knd-lavender/15 rounded-[10px] text-knd-lavender text-[12.5px] font-body"
