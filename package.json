@@ -11,7 +11,8 @@
     "post:daily": "tsx scripts/post-daily.ts",
     "post:x": "tsx scripts/post-to-x.ts",
     "post:threads": "tsx scripts/post-to-threads.ts",
-    "weekly": "tsx scripts/generate-weekly-content.ts"
+    "weekly": "tsx scripts/generate-weekly-content.ts",
+    "noa:chat": "tsx scripts/post-noa-chat.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
