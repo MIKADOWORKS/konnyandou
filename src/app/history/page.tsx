@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { getHistory, clearHistory, formatDate, HistoryEntry } from '@/lib/history';
 import StarField from '@/components/StarField';
 import NoaAvatar from '@/components/NoaAvatar';
@@ -121,7 +122,17 @@ export default function HistoryPage() {
       <StarField />
 
       <div className="relative z-10 px-5">
-        <div className="text-center pt-12 mb-6">
+        {/* Back link */}
+        <div className="pt-12 mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-[12px] text-knd-lavender/40 font-body hover:text-knd-lavender/60 transition-colors"
+          >
+            ← ホームに戻る
+          </Link>
+        </div>
+
+        <div className="text-center mb-6">
           <div className="text-[11px] text-knd-lavender/50 tracking-[4px] mb-2">
             READING HISTORY
           </div>
