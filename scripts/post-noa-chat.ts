@@ -128,7 +128,7 @@ ${seasonHint}
 ${tsukiMood[weekday] || ''}
 話題：${topic}
 
-この話題でノアのつぶやきを1つ。テキストのみ返して。末尾に #こんにゃん堂`;
+この話題でノアのつぶやきを1つ。テキストのみ返して。ハッシュタグは含めないで。`;
 }
 
 function sleep(ms: number): Promise<void> {
@@ -189,7 +189,7 @@ async function main() {
   const block = response.content[0];
   if (block.type !== 'text') { console.error('❌ エラー'); process.exit(1); }
 
-  const text = block.text.trim();
+  const text = block.text.trim().replace(/\s*#こんにゃん堂\s*$/g, '') + ' #こんにゃん堂';
 
   console.error(`✅ 生成完了（${text.length}文字）`);
   console.error(`   tokens: in=${response.usage.input_tokens} out=${response.usage.output_tokens}`);
