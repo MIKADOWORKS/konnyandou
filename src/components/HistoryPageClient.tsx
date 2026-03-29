@@ -11,6 +11,7 @@ function TypeBadge({ type }: { type: HistoryEntry['type'] }) {
     'tarot-single': { label: '一枚引き', color: '#f0d060', bg: 'rgba(240,208,96,0.15)' },
     'tarot-spread': { label: '3枚スプレッド', color: '#c8a0e0', bg: 'rgba(180,120,255,0.15)' },
     zodiac: { label: '星座占い', color: '#a8d8ff', bg: 'rgba(168,216,255,0.15)' },
+    compatibility: { label: '相性占い', color: '#f4a8c8', bg: 'rgba(244,168,200,0.15)' },
   }[type];
 
   return (
@@ -73,6 +74,21 @@ function HistoryCard({ entry }: { entry: HistoryEntry }) {
             <span className="text-[11px] text-knd-gold/80">
               {'★'.repeat(entry.overall)}
               {'☆'.repeat(5 - entry.overall)}
+            </span>
+          )}
+        </div>
+      )}
+
+      {entry.type === 'compatibility' && (
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-sm text-knd-gold font-display">
+            💕 {entry.person1Name ? `${entry.person1Name}（${entry.person1Sign}）` : entry.person1Sign}
+            {' × '}
+            {entry.person2Name ? `${entry.person2Name}（${entry.person2Sign}）` : entry.person2Sign}
+          </span>
+          {entry.score !== undefined && (
+            <span className="text-[11px] text-[#f4a8c8]/80 font-body">
+              {entry.score}点
             </span>
           )}
         </div>

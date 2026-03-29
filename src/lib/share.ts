@@ -88,3 +88,22 @@ export function buildZodiacShareUrl(
   });
   return `${SITE_URL}/share?${params.toString()}`;
 }
+
+export function buildCompatibilityShareText(
+  person1: string, sign1: string, icon1: string,
+  person2: string, sign2: string, icon2: string,
+  score: number, reading: string
+): string {
+  const shortReading = reading.length > 80 ? reading.slice(0, 80) + '…' : reading;
+  const p1label = person1 ? `${person1}（${sign1}）` : `${icon1}${sign1}`;
+  const p2label = person2 ? `${person2}（${sign2}）` : `${icon2}${sign2}`;
+  return `💕 ${p1label} × ${p2label} の相性スコア: ${score}点\n\n${shortReading}\n\n#こんにゃん堂 #相性占い`;
+}
+
+export function buildCompatibilityShareUrl(
+  person1: string, sign1: string, icon1: string,
+  person2: string, sign2: string, icon2: string,
+  score: number
+): string {
+  return `${SITE_URL}/share?type=compatibility&p1=${encodeURIComponent(person1)}&s1=${encodeURIComponent(sign1)}&i1=${encodeURIComponent(icon1)}&p2=${encodeURIComponent(person2)}&s2=${encodeURIComponent(sign2)}&i2=${encodeURIComponent(icon2)}&score=${score}`;
+}

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 const tabs = [
   { id: '/', label: 'ホーム', icon: '☽' },
   { id: '/tarot', label: 'タロット', icon: '✦' },
+  { id: '/compatibility', label: '相性', icon: '💕' },
   { id: '/chat', label: 'ノアに相談', icon: '💬' },
 ] as const;
 

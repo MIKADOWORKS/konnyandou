@@ -284,6 +284,133 @@ function ZodiacLayout({
   );
 }
 
+function CompatibilityLayout({
+  person1,
+  sign1,
+  icon1,
+  person2,
+  sign2,
+  icon2,
+  score,
+}: {
+  person1: string;
+  sign1: string;
+  icon1: string;
+  person2: string;
+  sign2: string;
+  icon2: string;
+  score: number;
+}) {
+  return (
+    <OgBackground>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          padding: '40px 80px',
+        }}
+      >
+        <div
+          style={{
+            fontSize: 24,
+            color: '#c8a8ff',
+            letterSpacing: '0.1em',
+            display: 'flex',
+            marginBottom: 24,
+          }}
+        >
+          💕 相性占い
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 40,
+            marginBottom: 32,
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 72, display: 'flex' }}>{icon1}</div>
+            <div
+              style={{
+                fontSize: 28,
+                fontWeight: 700,
+                color: '#f0d060',
+                display: 'flex',
+              }}
+            >
+              {sign1}
+            </div>
+            {person1 && (
+              <div style={{ fontSize: 20, color: 'rgba(200, 168, 255, 0.7)', display: 'flex' }}>
+                {person1}
+              </div>
+            )}
+          </div>
+
+          <div style={{ fontSize: 48, color: 'rgba(200, 168, 255, 0.4)', display: 'flex' }}>
+            ×
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 72, display: 'flex' }}>{icon2}</div>
+            <div
+              style={{
+                fontSize: 28,
+                fontWeight: 700,
+                color: '#f0d060',
+                display: 'flex',
+              }}
+            >
+              {sign2}
+            </div>
+            {person2 && (
+              <div style={{ fontSize: 20, color: 'rgba(200, 168, 255, 0.7)', display: 'flex' }}>
+                {person2}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div
+          style={{
+            fontSize: 88,
+            fontWeight: 700,
+            color: '#f4a8c8',
+            textShadow: '0 0 40px rgba(244, 168, 200, 0.4)',
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: 8,
+          }}
+        >
+          <span style={{ display: 'flex' }}>{score}</span>
+          <span style={{ fontSize: 36, color: 'rgba(244, 168, 200, 0.7)', display: 'flex' }}>点</span>
+        </div>
+      </div>
+      <OgBrandFooter />
+    </OgBackground>
+  );
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const type = searchParams.get('type');
@@ -330,6 +457,34 @@ export async function GET(request: NextRequest) {
 
       return new ImageResponse(
         <ZodiacLayout sign={sign} icon={icon} overallStars={overallStars} />,
+        {
+          ...OG_SIZE,
+          headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
+        },
+      );
+    }
+
+    if (type === 'compatibility') {
+      const person1 = (searchParams.get('p1') || '').slice(0, 20);
+      const sign1 = (searchParams.get('s1') || '').slice(0, 10);
+      const icon1 = (searchParams.get('i1') || '⭐').slice(0, 4);
+      const person2 = (searchParams.get('p2') || '').slice(0, 20);
+      const sign2 = (searchParams.get('s2') || '').slice(0, 10);
+      const icon2 = (searchParams.get('i2') || '⭐').slice(0, 4);
+      const score = Math.min(100, Math.max(0, Number(searchParams.get('score')) || 0));
+
+      if (!sign1 || !sign2) throw new Error('missing signs');
+
+      return new ImageResponse(
+        <CompatibilityLayout
+          person1={person1}
+          sign1={sign1}
+          icon1={icon1}
+          person2={person2}
+          sign2={sign2}
+          icon2={icon2}
+          score={score}
+        />,
         {
           ...OG_SIZE,
           headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },

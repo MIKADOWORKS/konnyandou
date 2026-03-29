@@ -45,6 +45,12 @@ export async function generateMetadata({
     const starStr = '★'.repeat(stars) + '☆'.repeat(5 - stars);
     title = `${sign}の今日の運勢 ${starStr} | ${SITE_NAME}`;
     description = `${sign}の今日の運勢は${starStr}！ノアの占いであなたの星座も占ってみませんか？`;
+  } else if (type === 'compatibility') {
+    const s1 = getParam(params, 's1');
+    const s2 = getParam(params, 's2');
+    const score = Number(getParam(params, 'score')) || 0;
+    title = `${s1} × ${s2} の相性スコア${score}点 | ${SITE_NAME}`;
+    description = `${s1}と${s2}の相性スコアは${score}点！あなたも相性占いをしてみませんか？`;
   }
 
   return {
@@ -77,12 +83,13 @@ export default async function SharePage({ searchParams }: SharePageProps) {
       {type === 'tarot' && <TarotShareContent params={params} />}
       {type === 'spread' && <SpreadShareContent params={params} />}
       {type === 'zodiac' && <ZodiacShareContent params={params} />}
-      {!['tarot', 'spread', 'zodiac'].includes(type) && (
+      {type === 'compatibility' && <CompatibilityShareContent params={params} />}
+      {!['tarot', 'spread', 'zodiac', 'compatibility'].includes(type) && (
         <div className="text-knd-lavender/60">占い結果が見つかりませんでした</div>
       )}
 
       <Link
-        href={type === 'zodiac' ? '/' : '/tarot'}
+        href={type === 'compatibility' ? '/compatibility' : type === 'zodiac' ? '/' : '/tarot'}
         className="mt-8 px-8 py-3 rounded-full bg-knd-purple text-white font-bold text-lg shadow-lg hover:opacity-90 transition-opacity"
       >
         自分も占ってみる →
@@ -197,6 +204,43 @@ function ZodiacShareContent({
           </span>
         ))}
       </div>
+    </div>
+  );
+}
+
+function CompatibilityShareContent({
+  params,
+}: {
+  params: Record<string, string | string[] | undefined>;
+}) {
+  const p1 = getParam(params, 'p1');
+  const s1 = getParam(params, 's1');
+  const i1 = getParam(params, 'i1') || '⭐';
+  const p2 = getParam(params, 'p2');
+  const s2 = getParam(params, 's2');
+  const i2 = getParam(params, 'i2') || '⭐';
+  const score = Math.min(100, Math.max(0, Number(getParam(params, 'score')) || 0));
+
+  return (
+    <div className="animate-fadeSlideIn w-full max-w-sm">
+      <div className="text-knd-lavender/60 text-sm tracking-wider mb-6">
+        💕 相性占い結果
+      </div>
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="flex flex-col items-center gap-1">
+          <div className="text-5xl">{i1}</div>
+          <div className="text-sm font-bold text-knd-gold">{s1}</div>
+          {p1 && <div className="text-xs text-knd-lavender/60">{p1}</div>}
+        </div>
+        <div className="text-2xl text-knd-lavender/40">×</div>
+        <div className="flex flex-col items-center gap-1">
+          <div className="text-5xl">{i2}</div>
+          <div className="text-sm font-bold text-knd-gold">{s2}</div>
+          {p2 && <div className="text-xs text-knd-lavender/60">{p2}</div>}
+        </div>
+      </div>
+      <div className="text-6xl font-bold text-knd-gold mb-1">{score}</div>
+      <div className="text-knd-lavender/50 text-sm">点</div>
     </div>
   );
 }
