@@ -1,4 +1,4 @@
-export type ReadingType = 'tarot-single' | 'tarot-spread' | 'zodiac' | 'compatibility';
+export type ReadingType = 'tarot-single' | 'tarot-spread' | 'zodiac' | 'compatibility' | 'numerology';
 
 export interface HistoryEntry {
   id: string;
@@ -29,6 +29,9 @@ export interface HistoryEntry {
   person2Name?: string;
   person2Sign?: string;
   score?: number;
+  // Numerology
+  lifePathNumber?: number;
+  keyword?: string;
 }
 
 const STORAGE_KEY = 'konnyandou-history';
