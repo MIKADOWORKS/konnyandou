@@ -51,6 +51,10 @@ export async function generateMetadata({
     const score = Number(getParam(params, 'score')) || 0;
     title = `${s1} × ${s2} の相性スコア${score}点 | ${SITE_NAME}`;
     description = `${s1}と${s2}の相性スコアは${score}点！あなたも相性占いをしてみませんか？`;
+  } else if (type === 'numerology') {
+    const num = getParam(params, 'num');
+    title = `ライフパスナンバー「${num}」 | ${SITE_NAME}`;
+    description = `私のライフパスナンバーは「${num}」！あなたも数秘術で自分の数字を調べてみませんか？`;
   }
 
   return {
@@ -84,12 +88,13 @@ export default async function SharePage({ searchParams }: SharePageProps) {
       {type === 'spread' && <SpreadShareContent params={params} />}
       {type === 'zodiac' && <ZodiacShareContent params={params} />}
       {type === 'compatibility' && <CompatibilityShareContent params={params} />}
-      {!['tarot', 'spread', 'zodiac', 'compatibility'].includes(type) && (
+      {type === 'numerology' && <NumerologyShareContent params={params} />}
+      {!['tarot', 'spread', 'zodiac', 'compatibility', 'numerology'].includes(type) && (
         <div className="text-knd-lavender/60">占い結果が見つかりませんでした</div>
       )}
 
       <Link
-        href={type === 'compatibility' ? '/compatibility' : type === 'zodiac' ? '/' : '/tarot'}
+        href={type === 'compatibility' ? '/compatibility' : type === 'numerology' ? '/numerology' : type === 'zodiac' ? '/' : '/tarot'}
         className="mt-8 px-8 py-3 rounded-full bg-knd-purple text-white font-bold text-lg shadow-lg hover:opacity-90 transition-opacity"
       >
         自分も占ってみる →
@@ -241,6 +246,21 @@ function CompatibilityShareContent({
       </div>
       <div className="text-6xl font-bold text-knd-gold mb-1">{score}</div>
       <div className="text-knd-lavender/50 text-sm">点</div>
+    </div>
+  );
+}
+
+function NumerologyShareContent({
+  params,
+}: {
+  params: Record<string, string | string[] | undefined>;
+}) {
+  const num = getParam(params, 'num');
+  return (
+    <div className="bg-knd-purple/30 border border-knd-lavender/15 rounded-2xl p-6 w-full max-w-sm mb-2">
+      <div className="text-knd-lavender/60 text-sm mb-4">🔢 数秘術占い結果</div>
+      <div className="text-8xl font-bold text-knd-gold mb-2">{num}</div>
+      <div className="text-knd-lavender/60 text-sm">ライフパスナンバー</div>
     </div>
   );
 }
