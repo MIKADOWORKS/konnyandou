@@ -21,8 +21,8 @@ function buildNumerologyShareText(lifePathNumber: number, keyword: string, readi
   return `🔢 私のライフパスナンバーは「${lifePathNumber}」！キーワード：${keyword}\n\n${shortReading}\n\n#こんにゃん堂 #数秘術`;
 }
 
-function buildNumerologyShareUrl(lifePathNumber: number): string {
-  return `${SITE_URL}/share?type=numerology&num=${lifePathNumber}`;
+function buildNumerologyShareUrl(_lifePathNumber: number): string {
+  return SITE_URL;
 }
 
 export default function NumerologyPageClient() {

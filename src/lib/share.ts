@@ -48,45 +48,26 @@ export function buildZodiacShareText(
 // --- Dynamic share URL builders ---
 
 export function buildTarotShareUrl(
-  cardName: string,
-  cardNameEn: string,
-  cardEmoji: string,
-  isReversed: boolean
+  _cardName: string,
+  _cardNameEn: string,
+  _cardEmoji: string,
+  _isReversed: boolean
 ): string {
-  const params = new URLSearchParams({
-    type: 'tarot',
-    card: cardName,
-    en: cardNameEn,
-    emoji: cardEmoji,
-    rev: isReversed ? '1' : '0',
-  });
-  return `${SITE_URL}/share?${params.toString()}`;
+  return SITE_URL;
 }
 
 export function buildSpreadShareUrl(
-  cards: { name: string; emoji: string; isReversed: boolean }[]
+  _cards: { name: string; emoji: string; isReversed: boolean }[]
 ): string {
-  const params = new URLSearchParams({ type: 'spread' });
-  cards.forEach((card, i) => {
-    params.set(`c${i}`, card.name);
-    params.set(`e${i}`, card.emoji);
-    params.set(`r${i}`, card.isReversed ? '1' : '0');
-  });
-  return `${SITE_URL}/share?${params.toString()}`;
+  return SITE_URL;
 }
 
 export function buildZodiacShareUrl(
-  sign: string,
-  signIcon: string,
-  overallStars: number
+  _sign: string,
+  _signIcon: string,
+  _overallStars: number
 ): string {
-  const params = new URLSearchParams({
-    type: 'zodiac',
-    sign,
-    icon: signIcon,
-    stars: String(overallStars),
-  });
-  return `${SITE_URL}/share?${params.toString()}`;
+  return SITE_URL;
 }
 
 export function buildCompatibilityShareText(
@@ -101,9 +82,9 @@ export function buildCompatibilityShareText(
 }
 
 export function buildCompatibilityShareUrl(
-  person1: string, sign1: string, icon1: string,
-  person2: string, sign2: string, icon2: string,
-  score: number
+  _person1: string, _sign1: string, _icon1: string,
+  _person2: string, _sign2: string, _icon2: string,
+  _score: number
 ): string {
-  return `${SITE_URL}/share?type=compatibility&p1=${encodeURIComponent(person1)}&s1=${encodeURIComponent(sign1)}&i1=${encodeURIComponent(icon1)}&p2=${encodeURIComponent(person2)}&s2=${encodeURIComponent(sign2)}&i2=${encodeURIComponent(icon2)}&score=${score}`;
+  return SITE_URL;
 }
