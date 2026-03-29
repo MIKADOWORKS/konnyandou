@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Zen_Maru_Gothic, Noto_Sans_JP } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import BottomTabNav from '@/components/BottomTabNav';
 import { SITE_URL } from '@/lib/constants';
@@ -48,6 +49,12 @@ export default function RootLayout({
           <main>{children}</main>
           <BottomTabNav />
         </div>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9975836212100204"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
