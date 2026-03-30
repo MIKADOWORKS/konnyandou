@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Image from 'next/image';
 import { saveToHistory } from '@/lib/history';
 import ShareButtons from '@/components/ShareButtons';
 import { buildSpreadShareUrl } from '@/lib/share';
@@ -178,16 +179,30 @@ export default function ThreeCardSpread() {
                 </div>
                 {isVisible ? (
                   <div
-                    className="w-[100px] h-[150px] bg-gradient-to-b from-[#1a0e40] via-[#2a1860] to-[#3a2080] border-[1.5px] border-knd-gold/50 rounded-lg flex flex-col items-center justify-center gap-1 shadow-[0_0_20px_rgba(240,208,96,0.1)] animate-cardReveal"
+                    className="w-[100px] h-[150px] rounded-lg border-[1.5px] border-knd-gold/50 shadow-[0_0_20px_rgba(240,208,96,0.1)] animate-cardReveal overflow-hidden relative"
                     style={{ transform: d.isReversed ? 'rotate(180deg)' : 'none' }}
                   >
-                    <div className="text-[24px]">{d.card.emoji}</div>
-                    <div className="text-[11px] text-knd-gold font-display font-medium">
-                      {d.card.name}
-                    </div>
-                    <div className="text-[7px] text-knd-lavender/50 tracking-[1px]">
-                      {d.card.nameEn}
-                    </div>
+                    {d.card.image ? (
+                      <>
+                        <Image
+                          src={d.card.image}
+                          alt={d.card.name}
+                          width={100}
+                          height={150}
+                          className="object-cover w-full h-full"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-1 py-1 flex flex-col items-center gap-0.5">
+                          <div className="text-[10px] text-knd-gold font-display font-medium">{d.card.name}</div>
+                          <div className="text-[7px] text-knd-lavender/70 tracking-[1px]">{d.card.nameEn}</div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-b from-[#1a0e40] via-[#2a1860] to-[#3a2080] flex flex-col items-center justify-center gap-1">
+                        <div className="text-[24px]">{d.card.emoji}</div>
+                        <div className="text-[11px] text-knd-gold font-display font-medium">{d.card.name}</div>
+                        <div className="text-[7px] text-knd-lavender/50 tracking-[1px]">{d.card.nameEn}</div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="w-[100px] h-[150px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-[1.5px] border-knd-gold/25 rounded-lg flex items-center justify-center">
