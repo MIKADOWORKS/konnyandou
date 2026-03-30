@@ -54,9 +54,9 @@ const RANKING_INTROS: string[] = [
 ];
 
 const RANKING_OUTROS: string[] = [
-  '詳しい運勢はリプ欄で',
-  '各星座の詳細はリプ欄',
-  'あなたの星座は何位？ 詳細はリプ欄',
+  'あなたの詳細はこちら👇\nhttps://konnyandou.jp',
+  '詳しい運勢はこちらでチェック✨\nhttps://konnyandou.jp',
+  'あなたの星座は何位？詳細はこちら🔮\nhttps://konnyandou.jp',
 ];
 
 export function buildRankingPost(posts: ZodiacPost[], dateShort: string): string {

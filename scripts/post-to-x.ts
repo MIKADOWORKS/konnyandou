@@ -114,86 +114,28 @@ async function main() {
   const dateShort = data.date.replace(/\d+年/, '').replace('月', '/').replace('日', '');
 
   console.error(`📱 X投稿: ${data.date}（${data.weekday}）の運勢`);
-  console.error(`   投稿数: 13（ランキング1 + 個別12）`);
-  console.error(`   間隔: ${delaySec}秒`);
+  console.error(`   投稿数: 1（ランキングのみ、サイトへ誘導）`);
   if (dryRun) console.error('   ⚠️  DRY RUN モード（実際には投稿しません）');
   console.error('');
 
-  // 投稿テキスト一覧を作成
   const ranking = buildRankingPost(data.posts, dateShort);
-  const individuals = data.posts.map((p) => buildIndividualPost(p, dateShort));
-
-  const closing = `こんにゃん出ましたけど〜！🔮
-
-今日もみんなにとっていい日になりますように✨
-気になる星座があったらリプで教えてね！
-
-#こんにゃん堂 #ノア`;
-
-  const allPosts = [
-    { label: '📊 ランキング', text: ranking },
-    ...individuals.map((text, i) => ({
-      label: `${data.posts[i].icon} ${data.posts[i].sign}`,
-      text,
-    })),
-    { label: '🐱 締め', text: closing },
-  ];
 
   if (dryRun) {
-    for (const post of allPosts) {
-      console.log(`── ${post.label} (${post.text.length}文字) ──`);
-      console.log(post.text);
-      console.log('');
-    }
-    console.error(`✅ DRY RUN完了: ${allPosts.length}投稿をプレビューしました`);
+    console.log(`── 📊 ランキング (${ranking.length}文字) ──`);
+    console.log(ranking);
+    console.error('✅ DRY RUN完了');
     return;
   }
 
   const client = getClient();
-  let rankingTweetId: string | undefined;
 
-  for (let i = 0; i < allPosts.length; i++) {
-    const post = allPosts[i];
-    try {
-      // 個別投稿はランキングへのリプライとしてスレッド化
-      const replyTo = i > 0 ? rankingTweetId : undefined;
-
-      // 個別星座投稿（インデックス1〜12）に画像を添付
-      let mediaId: string | undefined;
-      const zodiacIndex = i - 1; // ランキングが0番目なので
-      if (zodiacIndex >= 0 && zodiacIndex < data.posts.length) {
-        const imageBuffer = await fetchZodiacImage(data.posts[zodiacIndex]);
-        if (imageBuffer) {
-          const uploaded = await uploadMedia(client, imageBuffer);
-          if (uploaded) {
-            mediaId = uploaded;
-            console.error(`   🖼 画像アップロード完了: ${mediaId}`);
-          }
-        }
-      }
-
-      const tweetId = await postTweet(client, post.text, replyTo, mediaId);
-
-      if (i === 0) rankingTweetId = tweetId;
-
-      console.error(`✅ [${i + 1}/${allPosts.length}] ${post.label} → ${tweetId}`);
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : String(e);
-      console.error(`❌ [${i + 1}/${allPosts.length}] ${post.label} → エラー: ${message}`);
-
-      // レート制限エラーの場合は中断
-      if (message.includes('429') || message.includes('rate')) {
-        console.error('⚠️  レート制限に達しました。残りの投稿を中断します。');
-        console.error(`   未投稿: ${allPosts.length - i - 1}件`);
-        break;
-      }
-    }
-
-    // 最後の投稿でなければ待機
-    if (i < allPosts.length - 1) {
-      console.error(`   ⏳ ${delaySec}秒待機...`);
-      await sleep(delaySec * 1000);
-    }
+  try {
+    const tweetId = await postTweet(client, ranking);
+    console.error(`✅ 📊 ランキング → ${tweetId}`);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error(`❌ ランキング投稿エラー: ${message}`);
+    process.exit(1);
   }
 
   console.error('');
