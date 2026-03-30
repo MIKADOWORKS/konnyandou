@@ -112,9 +112,10 @@ async function main() {
   if (dateIdx !== -1 && args[dateIdx + 1]) {
     targetDate = new Date(args[dateIdx + 1] + 'T00:00:00+09:00');
   } else {
-    // 翌日の運勢を生成（前日夜に実行する想定）
-    targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 1);
+    // 当日の運勢を生成（朝に実行、JST基準）
+    const now = new Date();
+    const jst = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    targetDate = jst;
   }
 
   const y = targetDate.getFullYear();
