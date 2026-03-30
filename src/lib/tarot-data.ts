@@ -7,6 +7,7 @@ export const majorArcana: TarotCard[] = [
     nameEn: 'The Fool',
     emoji: '🃏',
     image: '/images/cards/00-the-fool.jpg',
+    image: '/images/cards/00-the-fool.jpg',
     keywords: {
       upright: ['新たな始まり', '自由', '冒険', '無邪気'],
       reversed: ['無謀', '軽率', '不安定', 'リスク'],
