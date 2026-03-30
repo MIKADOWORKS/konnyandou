@@ -6,7 +6,7 @@ export const majorArcana: TarotCard[] = [
     name: '愚者',
     nameEn: 'The Fool',
     emoji: '🃏',
-    image: '/images/cards/00-the-fool.png',
+    image: '/images/cards/00-the-fool.jpg',
     keywords: {
       upright: ['新たな始まり', '自由', '冒険', '無邪気'],
       reversed: ['無謀', '軽率', '不安定', 'リスク'],
@@ -17,7 +17,7 @@ export const majorArcana: TarotCard[] = [
     name: '魔術師',
     nameEn: 'The Magician',
     emoji: '🪄',
-    image: '/images/cards/01-the-magician.png',
+    image: '/images/cards/01-the-magician.jpg',
     keywords: {
       upright: ['創造力', '自信', '技術', '意志の力'],
       reversed: ['未熟', '空回り', '詐欺', '才能の無駄遣い'],
@@ -28,7 +28,7 @@ export const majorArcana: TarotCard[] = [
     name: '女教皇',
     nameEn: 'The High Priestess',
     emoji: '🌙',
-    image: '/images/cards/02-the-high-priestess.png',
+    image: '/images/cards/02-the-high-priestess.jpg',
     keywords: {
       upright: ['直感', '神秘', '知性', '静けさ'],
       reversed: ['秘密', '混乱', '表面的', '直感の無視'],
@@ -39,7 +39,7 @@ export const majorArcana: TarotCard[] = [
     name: '女帝',
     nameEn: 'The Empress',
     emoji: '👑',
-    image: '/images/cards/03-the-empress.png',
+    image: '/images/cards/03-the-empress.jpg',
     keywords: {
       upright: ['豊かさ', '母性', '美', '自然'],
       reversed: ['過保護', '依存', '怠惰', '創造力の枯渇'],
@@ -50,7 +50,7 @@ export const majorArcana: TarotCard[] = [
     name: '皇帝',
     nameEn: 'The Emperor',
     emoji: '🏛️',
-    image: '/images/cards/04-the-emperor.png',
+    image: '/images/cards/04-the-emperor.jpg',
     keywords: {
       upright: ['権威', '安定', 'リーダーシップ', '秩序'],
       reversed: ['独裁', '頑固', '支配的', '未成熟'],
@@ -61,7 +61,7 @@ export const majorArcana: TarotCard[] = [
     name: '教皇',
     nameEn: 'The Hierophant',
     emoji: '📿',
-    image: '/images/cards/05-the-hierophant.png',
+    image: '/images/cards/05-the-hierophant.jpg',
     keywords: {
       upright: ['伝統', '教え', '信仰', '慈悲'],
       reversed: ['形骸化', '独善', '束縛', '反抗'],
@@ -72,7 +72,7 @@ export const majorArcana: TarotCard[] = [
     name: '恋人',
     nameEn: 'The Lovers',
     emoji: '💕',
-    image: '/images/cards/06-the-lovers.png',
+    image: '/images/cards/06-the-lovers.jpg',
     keywords: {
       upright: ['愛', '調和', '選択', 'パートナーシップ'],
       reversed: ['不調和', '誘惑', '優柔不断', '価値観の相違'],
@@ -83,7 +83,7 @@ export const majorArcana: TarotCard[] = [
     name: '戦車',
     nameEn: 'The Chariot',
     emoji: '⚔️',
-    image: '/images/cards/07-the-chariot.png',
+    image: '/images/cards/07-the-chariot.jpg',
     keywords: {
       upright: ['勝利', '前進', '意志', '克服'],
       reversed: ['暴走', '方向性の喪失', '挫折', '自制心の欠如'],
@@ -94,7 +94,7 @@ export const majorArcana: TarotCard[] = [
     name: '力',
     nameEn: 'Strength',
     emoji: '🦁',
-    image: '/images/cards/08-strength.png',
+    image: '/images/cards/08-strength.jpg',
     keywords: {
       upright: ['内なる力', '勇気', '忍耐', '優しさ'],
       reversed: ['弱さ', '自信喪失', '抑圧', '力の乱用'],
@@ -105,7 +105,7 @@ export const majorArcana: TarotCard[] = [
     name: '隠者',
     nameEn: 'The Hermit',
     emoji: '🏔️',
-    image: '/images/cards/09-the-hermit.png',
+    image: '/images/cards/09-the-hermit.jpg',
     keywords: {
       upright: ['内省', '探求', '孤独', '知恵'],
       reversed: ['孤立', '引きこもり', '頑固', '閉鎖的'],
@@ -116,7 +116,7 @@ export const majorArcana: TarotCard[] = [
     name: '運命の輪',
     nameEn: 'Wheel of Fortune',
     emoji: '🎡',
-    image: '/images/cards/10-wheel-of-fortune.png',
+    image: '/images/cards/10-wheel-of-fortune.jpg',
     keywords: {
       upright: ['転機', '運命', 'チャンス', 'サイクル'],
       reversed: ['不運', '停滞', '抵抗', '悪循環'],
@@ -127,7 +127,7 @@ export const majorArcana: TarotCard[] = [
     name: '正義',
     nameEn: 'Justice',
     emoji: '⚖️',
-    image: '/images/cards/11-justice.png',
+    image: '/images/cards/11-justice.jpg',
     keywords: {
       upright: ['公正', 'バランス', '真実', '因果応報'],
       reversed: ['不公平', '偏見', '不正', 'バランスの崩れ'],
@@ -138,7 +138,7 @@ export const majorArcana: TarotCard[] = [
     name: '吊るされた男',
     nameEn: 'The Hanged Man',
     emoji: '🙃',
-    image: '/images/cards/12-the-hanged-man.png',
+    image: '/images/cards/12-the-hanged-man.jpg',
     keywords: {
       upright: ['忍耐', '視点の転換', '手放し', '献身'],
       reversed: ['無駄な犠牲', '遅延', '優柔不断', '執着'],
@@ -149,7 +149,7 @@ export const majorArcana: TarotCard[] = [
     name: '死神',
     nameEn: 'Death',
     emoji: '🦋',
-    image: '/images/cards/13-death.png',
+    image: '/images/cards/13-death.jpg',
     keywords: {
       upright: ['変容', '終わりと始まり', '再生', '解放'],
       reversed: ['変化への抵抗', '停滞', '依存', '過去への執着'],
@@ -160,7 +160,7 @@ export const majorArcana: TarotCard[] = [
     name: '節制',
     nameEn: 'Temperance',
     emoji: '🌈',
-    image: '/images/cards/14-temperance.png',
+    image: '/images/cards/14-temperance.jpg',
     keywords: {
       upright: ['調和', 'バランス', '節度', '癒し'],
       reversed: ['不均衡', '極端', '焦り', '調整不足'],
@@ -171,7 +171,7 @@ export const majorArcana: TarotCard[] = [
     name: '悪魔',
     nameEn: 'The Devil',
     emoji: '😈',
-    image: '/images/cards/15-the-devil.png',
+    image: '/images/cards/15-the-devil.jpg',
     keywords: {
       upright: ['束縛', '誘惑', '執着', '欲望'],
       reversed: ['解放', '目覚め', '回復', '束縛からの脱却'],
@@ -182,7 +182,7 @@ export const majorArcana: TarotCard[] = [
     name: '塔',
     nameEn: 'The Tower',
     emoji: '⚡',
-    image: '/images/cards/16-the-tower.png',
+    image: '/images/cards/16-the-tower.jpg',
     keywords: {
       upright: ['崩壊', '衝撃', '解放', '目覚め'],
       reversed: ['変化への恐れ', '回避', '延期', '内面的な変革'],
@@ -193,7 +193,7 @@ export const majorArcana: TarotCard[] = [
     name: '星',
     nameEn: 'The Star',
     emoji: '⭐',
-    image: '/images/cards/17-the-star.png',
+    image: '/images/cards/17-the-star.jpg',
     keywords: {
       upright: ['希望', 'インスピレーション', '癒し', '導き'],
       reversed: ['絶望', '信念の喪失', '失望', '方向性の喪失'],
@@ -204,7 +204,7 @@ export const majorArcana: TarotCard[] = [
     name: '月',
     nameEn: 'The Moon',
     emoji: '🌕',
-    image: '/images/cards/18-the-moon.png',
+    image: '/images/cards/18-the-moon.jpg',
     keywords: {
       upright: ['不安', '幻想', '直感', '潜在意識'],
       reversed: ['混乱の解消', '真実', '恐れの克服', '明晰'],
@@ -215,7 +215,7 @@ export const majorArcana: TarotCard[] = [
     name: '太陽',
     nameEn: 'The Sun',
     emoji: '☀️',
-    image: '/images/cards/19-the-sun.png',
+    image: '/images/cards/19-the-sun.jpg',
     keywords: {
       upright: ['成功', '喜び', '活力', '達成'],
       reversed: ['一時的な挫折', '自信過剰', '延期', '楽観しすぎ'],
@@ -226,7 +226,7 @@ export const majorArcana: TarotCard[] = [
     name: '審判',
     nameEn: 'Judgement',
     emoji: '📯',
-    image: '/images/cards/20-judgement.png',
+    image: '/images/cards/20-judgement.jpg',
     keywords: {
       upright: ['復活', '覚醒', '決断', '使命'],
       reversed: ['後悔', '自己批判', '決断力の欠如', '無視'],
@@ -237,7 +237,7 @@ export const majorArcana: TarotCard[] = [
     name: '世界',
     nameEn: 'The World',
     emoji: '🌍',
-    image: '/images/cards/21-the-world.png',
+    image: '/images/cards/21-the-world.jpg',
     keywords: {
       upright: ['完成', '統合', '達成', '新たなステージ'],
       reversed: ['未完成', '遅延', '中途半端', '満足感の欠如'],
