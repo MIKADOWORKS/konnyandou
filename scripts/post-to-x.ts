@@ -13,8 +13,10 @@
 import './lib/env';
 import * as fs from 'fs';
 import { TwitterApi } from 'twitter-api-v2';
-import type { DailyHoroscopeData } from './lib/types';
+import type { DailyHoroscopeData, ZodiacPost } from './lib/types';
 import { buildIndividualPost, buildRankingPost } from './lib/format';
+
+const OG_BASE_URL = 'https://konnyandou-buc7.vercel.app';
 
 const DEFAULT_DELAY_SEC = 90; // 投稿間隔（秒）
 
@@ -40,14 +42,49 @@ function getClient(): TwitterApi {
   return new TwitterApi({ appKey, appSecret, accessToken, accessSecret });
 }
 
+async function fetchZodiacImage(post: ZodiacPost): Promise<Buffer | null> {
+  try {
+    const params = new URLSearchParams({
+      type: 'zodiac',
+      sign: post.sign,
+      icon: post.icon,
+      stars: String(post.stars),
+    });
+    const url = `${OG_BASE_URL}/api/og?${params.toString()}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const arrayBuffer = await res.arrayBuffer();
+    return Buffer.from(arrayBuffer);
+  } catch {
+    return null;
+  }
+}
+
+async function uploadMedia(client: TwitterApi, imageBuffer: Buffer): Promise<string | null> {
+  try {
+    const mediaId = await client.v1.uploadMedia(imageBuffer, { mimeType: 'image/png' });
+    return mediaId;
+  } catch {
+    return null;
+  }
+}
+
 async function postTweet(
   client: TwitterApi,
   text: string,
   replyTo?: string,
+  mediaId?: string,
 ): Promise<string> {
-  const params: { text: string; reply?: { in_reply_to_tweet_id: string } } = { text };
+  const params: {
+    text: string;
+    reply?: { in_reply_to_tweet_id: string };
+    media?: { media_ids: [string] };
+  } = { text };
   if (replyTo) {
     params.reply = { in_reply_to_tweet_id: replyTo };
+  }
+  if (mediaId) {
+    params.media = { media_ids: [mediaId] };
   }
   const result = await client.v2.tweet(params);
   return result.data.id;
@@ -113,7 +150,22 @@ async function main() {
     try {
       // 個別投稿はランキングへのリプライとしてスレッド化
       const replyTo = i > 0 ? rankingTweetId : undefined;
-      const tweetId = await postTweet(client, post.text, replyTo);
+
+      // 個別星座投稿（インデックス1〜12）に画像を添付
+      let mediaId: string | undefined;
+      const zodiacIndex = i - 1; // ランキングが0番目なので
+      if (zodiacIndex >= 0 && zodiacIndex < data.posts.length) {
+        const imageBuffer = await fetchZodiacImage(data.posts[zodiacIndex]);
+        if (imageBuffer) {
+          const uploaded = await uploadMedia(client, imageBuffer);
+          if (uploaded) {
+            mediaId = uploaded;
+            console.error(`   🖼 画像アップロード完了: ${mediaId}`);
+          }
+        }
+      }
+
+      const tweetId = await postTweet(client, post.text, replyTo, mediaId);
 
       if (i === 0) rankingTweetId = tweetId;
 
