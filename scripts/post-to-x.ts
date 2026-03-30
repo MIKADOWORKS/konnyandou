@@ -12,6 +12,8 @@
 
 import './lib/env';
 import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 import { TwitterApi } from 'twitter-api-v2';
 import type { DailyHoroscopeData, ZodiacPost } from './lib/types';
 import { buildIndividualPost, buildRankingPost } from './lib/format';
@@ -61,12 +63,16 @@ async function fetchZodiacImage(post: ZodiacPost): Promise<Buffer | null> {
 }
 
 async function uploadMedia(client: TwitterApi, imageBuffer: Buffer): Promise<string | null> {
+  const tmpFile = path.join(os.tmpdir(), `knd-og-${Date.now()}.png`);
   try {
-    const mediaId = await client.v2.uploadMedia(imageBuffer, { media_type: 'image/png' });
+    fs.writeFileSync(tmpFile, imageBuffer);
+    const mediaId = await client.v1.uploadMedia(tmpFile, { mimeType: 'image/png' });
     return mediaId;
   } catch (e) {
     console.error(`   ⚠️  画像アップロード失敗: ${e instanceof Error ? e.message : String(e)}`);
     return null;
+  } finally {
+    fs.rmSync(tmpFile, { force: true });
   }
 }
 
