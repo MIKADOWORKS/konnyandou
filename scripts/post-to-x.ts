@@ -62,9 +62,10 @@ async function fetchZodiacImage(post: ZodiacPost): Promise<Buffer | null> {
 
 async function uploadMedia(client: TwitterApi, imageBuffer: Buffer): Promise<string | null> {
   try {
-    const mediaId = await client.v1.uploadMedia(imageBuffer, { mimeType: 'image/png' });
+    const mediaId = await client.v2.uploadMedia(imageBuffer, { media_type: 'image/png' });
     return mediaId;
-  } catch {
+  } catch (e) {
+    console.error(`   ⚠️  画像アップロード失敗: ${e instanceof Error ? e.message : String(e)}`);
     return null;
   }
 }
