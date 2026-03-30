@@ -67,6 +67,8 @@ export async function POST(req: NextRequest) {
     const systemPrompt = buildSystemPrompt();
     const messages = buildMessages(history, message);
 
+    const CHAT_MODEL = 'claude-sonnet-4-6';
+
     // ストリーミングモード
     if (stream) {
       const encoder = new TextEncoder();
@@ -77,6 +79,7 @@ export async function POST(req: NextRequest) {
               system: systemPrompt,
               messages,
               maxTokens: 400,
+              model: CHAT_MODEL,
             });
             for await (const chunk of gen) {
               controller.enqueue(
@@ -110,6 +113,7 @@ export async function POST(req: NextRequest) {
       system: systemPrompt,
       messages,
       maxTokens: 400,
+      model: CHAT_MODEL,
     });
 
     return NextResponse.json({ reply });
