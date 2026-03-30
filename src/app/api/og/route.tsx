@@ -411,9 +411,21 @@ function CompatibilityLayout({
   );
 }
 
+async function loadFont(): Promise<ArrayBuffer> {
+  const res = await fetch(
+    'https://fonts.gstatic.com/s/notosansjp/v52/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75s.woff2'
+  );
+  return res.arrayBuffer();
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const type = searchParams.get('type');
+
+  const fontData = await loadFont().catch(() => null);
+  const fonts = fontData
+    ? [{ name: 'Noto Sans JP', data: fontData, style: 'normal' as const }]
+    : [];
 
   try {
     if (type === 'tarot') {
@@ -428,6 +440,7 @@ export async function GET(request: NextRequest) {
         <TarotSingleLayout card={card} en={en} emoji={emoji} reversed={reversed} />,
         {
           ...OG_SIZE,
+          fonts,
           headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
         },
       );
@@ -444,7 +457,8 @@ export async function GET(request: NextRequest) {
 
       return new ImageResponse(<TarotSpreadLayout cards={cards} />, {
         ...OG_SIZE,
-        headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
+        fonts,
+          headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
       });
     }
 
@@ -459,6 +473,7 @@ export async function GET(request: NextRequest) {
         <ZodiacLayout sign={sign} icon={icon} overallStars={overallStars} />,
         {
           ...OG_SIZE,
+          fonts,
           headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
         },
       );
@@ -487,6 +502,7 @@ export async function GET(request: NextRequest) {
         />,
         {
           ...OG_SIZE,
+          fonts,
           headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
         },
       );
@@ -533,7 +549,8 @@ export async function GET(request: NextRequest) {
       </OgBackground>,
       {
         ...OG_SIZE,
-        headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
+        fonts,
+          headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
       },
     );
   }
