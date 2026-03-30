@@ -3,6 +3,7 @@ export interface TarotCard {
   name: string;
   nameEn: string;
   emoji: string;
+  image?: string;
   keywords: {
     upright: string[];
     reversed: string[];
