@@ -47,6 +47,16 @@ ${tsuki}
 
 // ── ランキング投稿のバリエーション ──
 
+const NOA_OPENINGS: string[] = [
+  'おはよ〜！今日もツキに聞いてきたよ🐱✨',
+  'おはようございます！今朝の運勢、出揃ったよ🔮',
+  'ツキが今日の運勢を教えてくれたにゃ🐱',
+  'おはよ！今日の星の流れ、チェックしてみて✨',
+  'おはようございます🌙 今日の運勢ランキング発表！',
+  '今日もノアが鑑定してきたよ🔮 気になる星座は何位？',
+  'おはよ〜！今日のツキの予言はこちら🐱',
+];
+
 const RANKING_INTROS: string[] = [
   '運勢ランキング',
   'きょうの運勢',
@@ -54,8 +64,8 @@ const RANKING_INTROS: string[] = [
 ];
 
 const RANKING_OUTROS: string[] = [
-  'あなたの詳細はこちら👇\nhttps://konnyandou.jp',
-  '詳しい運勢はこちらでチェック✨\nhttps://konnyandou.jp',
+  'あなたの詳しい運勢はこちら👇\nhttps://konnyandou.jp',
+  '詳しい鑑定はこちらでチェック✨\nhttps://konnyandou.jp',
   'あなたの星座は何位？詳細はこちら🔮\nhttps://konnyandou.jp',
 ];
 
@@ -65,8 +75,9 @@ export function buildRankingPost(posts: ZodiacPost[], dateShort: string): string
 
   // 日付からシード値を作ってパターン分散
   const daySeed = parseInt(dateShort.replace('/', ''), 10) || 0;
-  const intro = pickRandom(RANKING_INTROS, daySeed);
-  const outro = pickRandom(RANKING_OUTROS, daySeed + 1);
+  const opening = pickRandom(NOA_OPENINGS, daySeed);
+  const intro = pickRandom(RANKING_INTROS, daySeed + 1);
+  const outro = pickRandom(RANKING_OUTROS, daySeed + 2);
 
   // X の280文字制限に収まるよう、星表示を省略してコンパクトに
   const lines = sorted.map((p, i) => {
@@ -74,7 +85,9 @@ export function buildRankingPost(posts: ZodiacPost[], dateShort: string): string
     return `${prefix}${p.icon}${p.sign}`;
   });
 
-  return `🔮${dateShort} ${intro}
+  return `${opening}
+
+🔮${dateShort} ${intro}
 
 ${lines.join('\n')}
 
