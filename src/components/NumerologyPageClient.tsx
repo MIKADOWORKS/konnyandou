@@ -18,7 +18,7 @@ type Phase = 'input' | 'loading' | 'result';
 
 function buildNumerologyShareText(lifePathNumber: number, keyword: string, reading: string): string {
   const shortReading = reading.length > 80 ? reading.slice(0, 80) + '…' : reading;
-  return `🔢 私のライフパスナンバーは「${lifePathNumber}」！キーワード：${keyword}\n\n${shortReading}\n\n#こんにゃん堂 #数秘術`;
+  return `🔢 私のライフパスナンバーは「${lifePathNumber}」！キーワード：${keyword}\n\n${shortReading}\n\n@konnyandou #こんにゃん堂 #数秘術`;
 }
 
 function buildNumerologyShareUrl(_lifePathNumber: number): string {

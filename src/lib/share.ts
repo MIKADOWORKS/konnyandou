@@ -32,7 +32,7 @@ export function buildTarotShareText(
 ): string {
   const position = isReversed ? '逆位置' : '正位置';
   const shortReading = reading.length > 80 ? reading.slice(0, 80) + '…' : reading;
-  return `🔮 今日のタロット：${cardName}（${cardNameEn}）${position}\n\nノアの解釈：${shortReading}\n\n#こんにゃん堂 #タロット占い`;
+  return `🔮 今日のタロット：${cardName}（${cardNameEn}）${position}\n\nノアの解釈：${shortReading}\n\n@konnyandou #こんにゃん堂 #タロット占い`;
 }
 
 export function buildZodiacShareText(
@@ -42,7 +42,7 @@ export function buildZodiacShareText(
 ): string {
   const stars = '★'.repeat(overall) + '☆'.repeat(5 - overall);
   const shortReading = reading.length > 80 ? reading.slice(0, 80) + '…' : reading;
-  return `${sign}の今日の運勢 ${stars}\n\n${shortReading}\n\n#こんにゃん堂 #星座占い`;
+  return `${sign}の今日の運勢 ${stars}\n\n${shortReading}\n\n@konnyandou #こんにゃん堂 #星座占い`;
 }
 
 // --- Dynamic share URL builders ---
@@ -78,7 +78,7 @@ export function buildCompatibilityShareText(
   const shortReading = reading.length > 80 ? reading.slice(0, 80) + '…' : reading;
   const p1label = person1 ? `${person1}（${sign1}）` : `${icon1}${sign1}`;
   const p2label = person2 ? `${person2}（${sign2}）` : `${icon2}${sign2}`;
-  return `💕 ${p1label} × ${p2label} の相性スコア: ${score}点\n\n${shortReading}\n\n#こんにゃん堂 #相性占い`;
+  return `💕 ${p1label} × ${p2label} の相性スコア: ${score}点\n\n${shortReading}\n\n@konnyandou #こんにゃん堂 #相性占い`;
 }
 
 export function buildCompatibilityShareUrl(
