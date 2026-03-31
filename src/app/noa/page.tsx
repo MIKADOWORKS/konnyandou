@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import NoaAvatar from '@/components/NoaAvatar';
+import Image from 'next/image';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 
@@ -41,14 +41,25 @@ export default function NoaPage() {
       <StarField />
       <ConstellationDecor />
 
-      {/* ヘッダー */}
-      <div className="relative z-10 pt-10 pb-8 flex flex-col items-center gap-4 px-5">
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-knd-gold/10 blur-xl scale-125" />
-          <NoaAvatar size={100} borderColor="rgba(240, 208, 96, 0.6)" />
+      {/* ヒーローイラスト */}
+      <div className="relative z-10 w-full">
+        <div className="relative w-full aspect-[4/3]">
+          <Image
+            src="/images/noa-profile.png"
+            alt="ノアとツキのイラスト"
+            fill
+            priority
+            className="object-cover object-top"
+          />
+          {/* 下端をページ背景にフェードアウト */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0e0628] to-transparent" />
         </div>
+      </div>
+
+      {/* ヘッダー テキスト */}
+      <div className="relative z-10 -mt-8 pb-6 flex flex-col items-center gap-3 px-5">
         <div className="text-center">
-          <h1 className="text-[26px] font-display font-medium text-knd-gold tracking-[3px]">ノア</h1>
+          <h1 className="text-[28px] font-display font-medium text-knd-gold tracking-[4px]">ノア</h1>
           <p className="text-[12px] text-knd-lavender/60 tracking-[1.5px] mt-1">占い好きのフリーランス</p>
           <p className="text-[11px] text-knd-lavender/40 tracking-[1px] mt-0.5">こんにゃん堂 主宰</p>
         </div>
