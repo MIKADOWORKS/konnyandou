@@ -1,7 +1,15 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants';
+import { ZODIAC } from '@/lib/zodiac-data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const zodiacPages: MetadataRoute.Sitemap = ZODIAC.map((z) => ({
+    url: `${SITE_URL}/zodiac/${z.en.toLowerCase()}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }));
+
   return [
     {
       url: SITE_URL,
@@ -51,5 +59,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
+    ...zodiacPages,
   ];
 }
