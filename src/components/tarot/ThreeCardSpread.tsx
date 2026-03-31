@@ -142,7 +142,7 @@ export default function ThreeCardSpread() {
       {(phase === 'ready' || phase === 'shuffling' || phase === 'pick') && (
         <div className="relative h-[220px] flex justify-center items-center mb-6">
           {phase === 'ready' && (
-            <div className="w-[120px] h-[180px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-2 border-knd-gold/30 rounded-[10px] flex flex-col items-center justify-center shadow-[0_8px_32px_rgba(100,60,200,0.3)] animate-float">
+            <div className="w-[120px] h-[180px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-2 border-knd-gold/30 flex flex-col items-center justify-center shadow-[0_8px_32px_rgba(100,60,200,0.3)] animate-float">
               <span className="text-[28px] text-knd-gold mb-1.5">{'\u263D'}</span>
               <span className="text-[8px] text-knd-lavender/40 tracking-[2px]">3 CARDS</span>
             </div>
@@ -153,7 +153,7 @@ export default function ThreeCardSpread() {
               <div
                 key={i}
                 onClick={() => handlePick()}
-                className="absolute w-[80px] h-[120px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-[1.5px] border-knd-gold/25 rounded-lg flex items-center justify-center shadow-[0_4px_16px_rgba(60,30,120,0.5)]"
+                className="absolute w-[80px] h-[120px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-[1.5px] border-knd-gold/25 flex items-center justify-center shadow-[0_4px_16px_rgba(60,30,120,0.5)]"
                 style={{
                   transform: `translateX(${pos.x}px) rotate(${pos.rotation}deg)`,
                   transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -179,7 +179,7 @@ export default function ThreeCardSpread() {
                 </div>
                 {isVisible ? (
                   <div
-                    className="w-[100px] h-[150px] rounded-lg border-[1.5px] border-knd-gold/50 shadow-[0_0_20px_rgba(240,208,96,0.1)] animate-cardReveal overflow-hidden relative"
+                    className="w-[100px] h-[150px] border-[1.5px] border-knd-gold/50 shadow-[0_0_20px_rgba(240,208,96,0.1)] animate-cardReveal overflow-hidden relative"
                     style={{ transform: d.isReversed ? 'rotate(180deg)' : 'none' }}
                   >
                     {d.card.image ? (
@@ -205,7 +205,7 @@ export default function ThreeCardSpread() {
                     )}
                   </div>
                 ) : (
-                  <div className="w-[100px] h-[150px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-[1.5px] border-knd-gold/25 rounded-lg flex items-center justify-center">
+                  <div className="w-[100px] h-[150px] bg-gradient-to-br from-[#2a1860] to-[#1a0e40] border-[1.5px] border-knd-gold/25 flex items-center justify-center">
                     <span className="text-[14px] text-knd-gold/40">{'\u263D'}</span>
                   </div>
                 )}

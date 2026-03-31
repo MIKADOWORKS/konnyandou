@@ -51,6 +51,9 @@ export default function RootLayout({
           <main>{children}</main>
           <footer className="relative z-10 px-5 py-4 border-t border-knd-purple/20 text-center">
             <div className="flex justify-center gap-5 mb-2">
+              <Link href="/noa" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
+                ノアについて
+              </Link>
               <Link href="/privacy" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
                 プライバシーポリシー
               </Link>
