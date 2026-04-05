@@ -253,6 +253,25 @@ export default function HomePage() {
             <span>鑑定履歴を見る</span>
           </Link>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-8 px-5 py-4 border-t border-knd-purple/20 text-center">
+          <div className="flex justify-center gap-5 mb-2">
+            <Link href="/noa" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
+              ノアについて
+            </Link>
+            <Link href="/privacy" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
+              プライバシーポリシー
+            </Link>
+            <Link href="/terms" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
+              利用規約
+            </Link>
+            <Link href="/tokushoho" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
+              特商法表記
+            </Link>
+          </div>
+          <p className="text-[11px] text-knd-lavender/30">こんにゃん堂 © 2026 MIKADO WORKS</p>
+        </footer>
       </div>
     </div>
   );

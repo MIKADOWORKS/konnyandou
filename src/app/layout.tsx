@@ -3,7 +3,6 @@ import { Zen_Maru_Gothic, Noto_Sans_JP } from 'next/font/google';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
-import Link from 'next/link';
 import BottomTabNav from '@/components/BottomTabNav';
 import { SITE_URL } from '@/lib/constants';
 
@@ -49,23 +48,6 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <div className="max-w-[430px] mx-auto min-h-screen relative bg-gradient-to-b from-knd-indigo via-[#120838] to-[#0e0628] overflow-hidden">
           <main>{children}</main>
-          <footer className="relative z-10 px-5 py-4 border-t border-knd-purple/20 text-center">
-            <div className="flex justify-center gap-5 mb-2">
-              <Link href="/noa" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
-                ノアについて
-              </Link>
-              <Link href="/privacy" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
-                プライバシーポリシー
-              </Link>
-              <Link href="/terms" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
-                利用規約
-              </Link>
-              <Link href="/tokushoho" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
-                特商法表記
-              </Link>
-            </div>
-            <p className="text-[11px] text-knd-lavender/30">こんにゃん堂 © 2026 MIKADO WORKS</p>
-          </footer>
           {/* BottomTabNav の高さ分のスペーサー */}
           <div className="h-20" />
           <BottomTabNav />
