@@ -176,7 +176,7 @@ export default function ChatPageClient() {
   }, [input, isTyping, messages]);
 
   return (
-    <div className="fixed inset-0 bottom-[72px] z-20 flex flex-col max-w-[430px] mx-auto bg-gradient-to-b from-knd-indigo via-[#120838] to-[#0e0628]">
+    <div className="fixed top-0 left-0 right-0 bottom-[72px] z-20 flex flex-col w-full max-w-[430px] mx-auto overflow-hidden bg-gradient-to-b from-knd-indigo via-[#120838] to-[#0e0628]">
       {/* Chat header */}
       <div className="pt-12 px-5 pb-3.5 bg-[rgba(15,10,40,0.9)] backdrop-blur-[20px] border-b border-knd-lavender/10 flex items-center gap-3">
         <NoaAvatar size={38} borderColor="rgba(240, 208, 96, 0.3)" />
