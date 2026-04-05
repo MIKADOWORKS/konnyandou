@@ -287,8 +287,8 @@ export default function ChatPageClient() {
         </button>
       </div>
 
-      {/* チケット購入モーダル */}
-      {showPurchaseModal && (
+      {/* チケット購入モーダル（決済が有効な場合のみ） */}
+      {showPurchaseModal && process.env.NEXT_PUBLIC_PAYMENT_ENABLED === 'true' && (
         <TicketPurchaseModal onClose={() => setShowPurchaseModal(false)} />
       )}
     </div>
