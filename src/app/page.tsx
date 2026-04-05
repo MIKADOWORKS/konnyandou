@@ -106,7 +106,7 @@ export default function HomePage() {
 
         {/* Noa greeting */}
         <div className="flex gap-3 items-start mb-7 animate-fadeSlideIn" style={{ animationDelay: '0.2s' }}>
-          <NoaAvatar size={50} />
+          <NoaAvatar size={64} />
           <div className="bg-knd-purple/40 border border-knd-lavender/15 rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl px-4 py-3 text-[13.5px] leading-[1.7] text-[#d8d0e8] font-body">
             やっほー！今日はどの星座の運勢が気になる？ 下から選んでみて✨
           </div>
