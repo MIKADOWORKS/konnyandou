@@ -176,7 +176,7 @@ export default function ChatPageClient() {
   }, [input, isTyping, messages]);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="fixed inset-0 bottom-[72px] z-20 flex flex-col max-w-[430px] mx-auto bg-gradient-to-b from-knd-indigo via-[#120838] to-[#0e0628]">
       {/* Chat header */}
       <div className="pt-12 px-5 pb-3.5 bg-[rgba(15,10,40,0.9)] backdrop-blur-[20px] border-b border-knd-lavender/10 flex items-center gap-3">
         <NoaAvatar size={38} borderColor="rgba(240, 208, 96, 0.3)" />
@@ -192,7 +192,7 @@ export default function ChatPageClient() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-[140px] flex flex-col gap-3.5">
+      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-[80px] flex flex-col gap-3.5">
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -264,7 +264,7 @@ export default function ChatPageClient() {
       </div>
 
       {/* Input bar */}
-      <div className="fixed bottom-[58px] left-1/2 -translate-x-1/2 w-full max-w-[430px] px-3 py-2.5 bg-[rgba(15,10,40,0.95)] backdrop-blur-[20px] border-t border-knd-lavender/10 flex gap-2 box-border">
+      <div className="px-3 py-2.5 bg-[rgba(15,10,40,0.95)] border-t border-knd-lavender/10 flex gap-2">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
