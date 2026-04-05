@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
+import { getWebPageJsonLd } from '@/lib/jsonld';
 import ChatPageClient from '@/components/ChatPageClient';
 
 export const metadata: Metadata = {
@@ -22,5 +23,19 @@ export const metadata: Metadata = {
 };
 
 export default function ChatPage() {
-  return <ChatPageClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getWebPageJsonLd({
+            name: 'ノアに相談',
+            description: 'AIフレンド・ノアにチャットで気軽に相談。恋愛・仕事・人間関係…なんでも聞いてね。',
+            url: `${SITE_URL}/chat`,
+          })),
+        }}
+      />
+      <ChatPageClient />
+    </>
+  );
 }

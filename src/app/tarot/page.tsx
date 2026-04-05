@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
+import { getWebPageJsonLd } from '@/lib/jsonld';
 import TarotPageClient from '@/components/tarot/TarotPageClient';
 
 export const metadata: Metadata = {
@@ -22,5 +23,19 @@ export const metadata: Metadata = {
 };
 
 export default function TarotPage() {
-  return <TarotPageClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getWebPageJsonLd({
+            name: 'タロット占い',
+            description: 'AIフレンド・ノアがタロットカードであなたの運勢を占います。',
+            url: `${SITE_URL}/tarot`,
+          })),
+        }}
+      />
+      <TarotPageClient />
+    </>
+  );
 }

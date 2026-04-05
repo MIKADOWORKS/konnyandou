@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
+import { getWebPageJsonLd } from '@/lib/jsonld';
 import NumerologyPageClient from '@/components/NumerologyPageClient';
 
 export const metadata: Metadata = {
@@ -23,5 +24,19 @@ export const metadata: Metadata = {
 };
 
 export default function NumerologyPage() {
-  return <NumerologyPageClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getWebPageJsonLd({
+            name: '数秘術占い',
+            description: 'AIフレンド・ノアが生年月日からライフパスナンバーを読み解きます。',
+            url: `${SITE_URL}/numerology`,
+          })),
+        }}
+      />
+      <NumerologyPageClient />
+    </>
+  );
 }

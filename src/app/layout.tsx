@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import BottomTabNav from '@/components/BottomTabNav';
 import { SITE_URL } from '@/lib/constants';
+import { getWebSiteJsonLd, getOrganizationJsonLd } from '@/lib/jsonld';
 
 const zenMaruGothic = Zen_Maru_Gothic({
   weight: ['400', '500', '700'],
@@ -36,6 +37,10 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -46,6 +51,14 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${zenMaruGothic.variable} ${notoSansJP.variable}`}>
       <body className="min-h-screen antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(getWebSiteJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(getOrganizationJsonLd()) }}
+        />
         <div className="max-w-[430px] mx-auto min-h-screen relative bg-gradient-to-b from-knd-indigo via-[#120838] to-[#0e0628] overflow-hidden">
           <main>{children}</main>
           {/* BottomTabNav の高さ分のスペーサー */}

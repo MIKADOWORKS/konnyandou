@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
+import { getWebPageJsonLd } from '@/lib/jsonld';
 import CompatibilityPageClient from '@/components/CompatibilityPageClient';
 
 export const metadata: Metadata = {
@@ -24,5 +25,19 @@ export const metadata: Metadata = {
 };
 
 export default function CompatibilityPage() {
-  return <CompatibilityPageClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getWebPageJsonLd({
+            name: '相性占い',
+            description: 'AIフレンド・ノアが2人の星座の相性を占います。',
+            url: `${SITE_URL}/compatibility`,
+          })),
+        }}
+      />
+      <CompatibilityPageClient />
+    </>
+  );
 }
