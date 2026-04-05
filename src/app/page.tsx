@@ -6,6 +6,7 @@ import { ZODIAC, ZodiacSign } from '@/lib/zodiac-data';
 import { buildZodiacShareText, buildZodiacShareUrl } from '@/lib/share';
 import { SITE_URL } from '@/lib/constants';
 import { saveToHistory } from '@/lib/history';
+import Image from 'next/image';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 import NoaAvatar from '@/components/NoaAvatar';
@@ -81,7 +82,17 @@ export default function HomePage() {
 
       <div className="relative z-10 px-5">
         {/* Header */}
-        <div className="text-center pt-12 mb-8 animate-fadeSlideIn">
+        <div className="text-center pt-8 mb-8 animate-fadeSlideIn">
+          <div className="mb-4">
+            <Image
+              src="/images/logo.png"
+              alt="こんにゃん堂"
+              width={200}
+              height={112}
+              className="mx-auto rounded-xl"
+              priority
+            />
+          </div>
           <div className="text-[11px] text-knd-lavender/60 tracking-[4px] mb-2">
             {dateStr}（{dayStr}）
           </div>
