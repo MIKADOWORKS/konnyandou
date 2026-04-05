@@ -128,3 +128,104 @@ export function OgDivider() {
     />
   );
 }
+
+/**
+ * ノアアバター画像をArrayBufferとして読み込む。
+ * opengraph-image.tsx や /api/og で使用。
+ */
+export async function loadNoaAvatar(): Promise<ArrayBuffer> {
+  const url = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/images/noa-avatar.png`
+    : 'http://localhost:3000/images/noa-avatar.png';
+  const res = await fetch(url);
+  return res.arrayBuffer();
+}
+
+/**
+ * 各ページ共通のOGP画像レイアウト。
+ * アイコン + タイトル + サブタイトル + ノアアバターを表示。
+ */
+export function OgPageLayout({
+  icon,
+  title,
+  subtitle,
+  avatarSrc,
+}: {
+  icon: string;
+  title: string;
+  subtitle: string;
+  avatarSrc?: string;
+}) {
+  return (
+    <OgBackground>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          padding: '60px 80px',
+        }}
+      >
+        {/* Icon */}
+        <div style={{ fontSize: 64, display: 'flex', marginBottom: 16 }}>
+          {icon}
+        </div>
+
+        {/* Title */}
+        <div
+          style={{
+            fontSize: 72,
+            fontWeight: 700,
+            color: '#f0d060',
+            letterSpacing: '0.05em',
+            textShadow: '0 0 40px rgba(240, 208, 96, 0.3)',
+            display: 'flex',
+          }}
+        >
+          {title}
+        </div>
+
+        <OgDivider />
+
+        {/* Subtitle */}
+        <div
+          style={{
+            fontSize: 32,
+            color: '#c8a8ff',
+            letterSpacing: '0.08em',
+            display: 'flex',
+          }}
+        >
+          {subtitle}
+        </div>
+      </div>
+
+      {/* Noa avatar */}
+      {avatarSrc && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 28,
+            right: 40,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
+          <img
+            src={avatarSrc}
+            width={56}
+            height={56}
+            style={{ borderRadius: '50%', border: '2px solid rgba(240, 208, 96, 0.4)' }}
+          />
+          <div style={{ fontSize: 20, color: 'rgba(200, 168, 255, 0.6)', display: 'flex' }}>
+            こんにゃん堂
+          </div>
+        </div>
+      )}
+    </OgBackground>
+  );
+}

@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { OgBackground, OgDivider } from '@/lib/og-background'
+import { OgBackground, OgDivider, loadNoaAvatar } from '@/lib/og-background'
 
 export const alt = 'こんにゃん堂 - AIフレンド・ノアとツキのタロット占い'
 export const size = {
@@ -8,7 +8,12 @@ export const size = {
 }
 export const contentType = 'image/png'
 
-export default function Image() {
+export default async function Image() {
+  const avatarData = await loadNoaAvatar().catch(() => null)
+  const avatarSrc = avatarData
+    ? `data:image/png;base64,${Buffer.from(avatarData).toString('base64')}`
+    : undefined
+
   return new ImageResponse(
     (
       <OgBackground>
@@ -24,6 +29,20 @@ export default function Image() {
             padding: '60px 80px',
           }}
         >
+          {/* Noa avatar */}
+          {avatarSrc && (
+            <img
+              src={avatarSrc}
+              width={120}
+              height={120}
+              style={{
+                borderRadius: '50%',
+                border: '3px solid rgba(240, 208, 96, 0.4)',
+                marginBottom: 24,
+              }}
+            />
+          )}
+
           {/* Site name */}
           <div
             style={{
