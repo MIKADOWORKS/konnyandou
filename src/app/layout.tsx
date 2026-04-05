@@ -60,9 +60,14 @@ export default function RootLayout({
               <Link href="/terms" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
                 利用規約
               </Link>
+              <Link href="/tokushoho" className="text-[12px] text-knd-lavender/50 hover:text-knd-lavender/80 transition-colors">
+                特商法表記
+              </Link>
             </div>
             <p className="text-[11px] text-knd-lavender/30">こんにゃん堂 © 2026 MIKADO WORKS</p>
           </footer>
+          {/* BottomTabNav の高さ分のスペーサー */}
+          <div className="h-20" />
           <BottomTabNav />
         </div>
         <Script
