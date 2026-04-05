@@ -2,10 +2,19 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import NoaAvatar from '@/components/NoaAvatar';
+import UsageBadge from '@/components/UsageBadge';
+import TicketPurchaseModal from '@/components/TicketPurchaseModal';
 
 interface Message {
   from: 'noa' | 'user';
   text: string;
+}
+
+interface UsageState {
+  chatCount: number;
+  chatLimit: number;
+  chatTickets: number;
+  source: 'free' | 'ticket';
 }
 
 export default function ChatPageClient() {
@@ -18,7 +27,29 @@ export default function ChatPageClient() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [streamingText, setStreamingText] = useState('');
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [usage, setUsage] = useState<UsageState>({
+    chatCount: 0,
+    chatLimit: 3,
+    chatTickets: 0,
+    source: 'free',
+  });
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // 初回マウント時に使用量を取得
+  useEffect(() => {
+    fetch('/api/usage')
+      .then((res) => res.json())
+      .then((data) => {
+        setUsage({
+          chatCount: data.chatCount ?? 0,
+          chatLimit: data.chatLimit ?? 3,
+          chatTickets: data.chatTickets ?? 0,
+          source: (data.chatCount ?? 0) >= (data.chatLimit ?? 3) ? 'ticket' : 'free',
+        });
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -43,7 +74,34 @@ export default function ChatPageClient() {
         }),
       });
 
+      // 使用量制限に達した場合
+      if (res.status === 429) {
+        const errorData = await res.json();
+        if (errorData.error === 'limit_reached') {
+          setIsTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            { from: 'noa', text: errorData.message },
+          ]);
+          setShowPurchaseModal(true);
+          return;
+        }
+        throw new Error('Rate limited');
+      }
+
       if (!res.ok) throw new Error('API error');
+
+      // レスポンスヘッダーから残回数を取得
+      const remaining = res.headers.get('X-Chat-Remaining');
+      const source = res.headers.get('X-Chat-Source') as 'free' | 'ticket' | null;
+      if (remaining !== null && source) {
+        setUsage((prev) => ({
+          ...prev,
+          chatCount: source === 'free' ? prev.chatLimit - Number(remaining) : prev.chatCount,
+          chatTickets: source === 'ticket' ? Number(remaining) : prev.chatTickets,
+          source,
+        }));
+      }
 
       const reader = res.body?.getReader();
       if (!reader) throw new Error('No reader');
@@ -122,7 +180,7 @@ export default function ChatPageClient() {
       {/* Chat header */}
       <div className="pt-12 px-5 pb-3.5 bg-[rgba(15,10,40,0.9)] backdrop-blur-[20px] border-b border-knd-lavender/10 flex items-center gap-3">
         <NoaAvatar size={38} borderColor="rgba(240, 208, 96, 0.3)" />
-        <div>
+        <div className="flex-1">
           <div className="text-[15px] text-knd-lavender font-display font-medium">
             Noa
           </div>
@@ -130,6 +188,7 @@ export default function ChatPageClient() {
             {isTyping ? '\u{270D}\uFE0F 入力中...' : '\u25CF オンライン'}
           </div>
         </div>
+        <UsageBadge usage={usage} />
       </div>
 
       {/* Messages */}
@@ -227,6 +286,11 @@ export default function ChatPageClient() {
           {'\u2191'}
         </button>
       </div>
+
+      {/* チケット購入モーダル */}
+      {showPurchaseModal && (
+        <TicketPurchaseModal onClose={() => setShowPurchaseModal(false)} />
+      )}
     </div>
   );
 }

@@ -4,6 +4,13 @@ import { callClaude, callClaudeStream } from '@/lib/claude';
 import { NOA_CHAT_SYSTEM_PROMPT } from '@/lib/prompts';
 import { majorArcana } from '@/lib/tarot-data';
 import { rateLimit } from '@/lib/rate-limit';
+import {
+  getDailyChatCount,
+  incrementChatCount,
+  getChatTickets,
+  consumeChatTicket,
+  FREE_CHAT_LIMIT,
+} from '@/lib/usage';
 
 const MAX_HISTORY_LENGTH = 20;
 
@@ -63,11 +70,50 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 使用量チェック
+    const uid = req.cookies.get('knd_uid')?.value;
+    if (!uid) {
+      return NextResponse.json({ error: 'セッションが無効です。ページを再読み込みしてください。' }, { status: 401 });
+    }
+
+    const dailyCount = await getDailyChatCount(uid);
+    let source: 'free' | 'ticket' = 'free';
+    let remaining = FREE_CHAT_LIMIT - dailyCount;
+
+    if (dailyCount >= FREE_CHAT_LIMIT) {
+      const tickets = await getChatTickets(uid);
+      if (tickets <= 0) {
+        return NextResponse.json(
+          {
+            error: 'limit_reached',
+            message: '今日の無料チャットを使い切っちゃった！チケットを買うともっとチャットできるよ✨',
+          },
+          { status: 429 }
+        );
+      }
+      source = 'ticket';
+      remaining = tickets;
+    }
+
     const { message, history, stream } = parsed.data;
     const systemPrompt = buildSystemPrompt();
     const messages = buildMessages(history, message);
 
     const CHAT_MODEL = 'claude-sonnet-4-6';
+
+    // 使用量を消費（API呼び出し前にカウント）
+    if (source === 'free') {
+      await incrementChatCount(uid);
+      remaining = FREE_CHAT_LIMIT - (dailyCount + 1);
+    } else {
+      await consumeChatTicket(uid);
+      remaining = remaining - 1;
+    }
+
+    const usageHeaders = {
+      'X-Chat-Remaining': String(remaining),
+      'X-Chat-Source': source,
+    };
 
     // ストリーミングモード
     if (stream) {
@@ -104,6 +150,7 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
           Connection: 'keep-alive',
+          ...usageHeaders,
         },
       });
     }
@@ -116,7 +163,7 @@ export async function POST(req: NextRequest) {
       model: CHAT_MODEL,
     });
 
-    return NextResponse.json({ reply });
+    return NextResponse.json({ reply }, { headers: usageHeaders });
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(

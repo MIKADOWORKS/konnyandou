@@ -130,14 +130,36 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">5. 知的財産権</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">5. 有料サービス</h2>
+            <ul className="space-y-3 pl-4">
+              <li className="flex gap-2">
+                <span className="text-knd-gold shrink-0">・</span>
+                <span>本サービスでは、一部の機能について有料チケットを提供しています。チケットの価格・内容は各購入ページに表示されるとおりです。</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-knd-gold shrink-0">・</span>
+                <span>決済はStripe社のシステムを利用し、クレジットカードにて行います。決済完了後、即時ご利用いただけます。</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-knd-gold shrink-0">・</span>
+                <span>デジタルコンテンツの性質上、購入後の返品・返金は原則としてお受けできません。ただし、サービスに重大な不具合がある場合は個別にご対応いたします。</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-knd-gold shrink-0">・</span>
+                <span>購入済みチケットの有効期限はありませんが、サービス終了時には未使用チケットの返金対応を行います。</span>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">6. 知的財産権</h2>
             <p>
               本サービスのコンテンツ（テキスト・画像・デザイン・キャラクター設定など）に関する著作権その他の知的財産権は、当社または正当な権利を有する第三者に帰属します。お客様は、私的利用の範囲を超えて複製・転用・販売等をすることはできません。
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">6. サービスの変更・停止</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">7. サービスの変更・停止</h2>
             <p className="mb-3">
               当社は、以下の場合にお客様への事前通知なく、本サービスの内容を変更・一時停止・終了することがあります。
             </p>
@@ -161,28 +183,28 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">7. 外部サービスについて</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">8. 外部サービスについて</h2>
             <p>
               本サービスはAnthropicのClaude API、Googleのサービス、Vercelなど第三者のサービスを利用しています。これらのサービスの利用には各社の利用規約・プライバシーポリシーが適用されます。当社は外部サービスの変更・停止・障害について責任を負いません。
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">8. 規約の変更</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">9. 規約の変更</h2>
             <p>
               当社は、必要に応じて本規約を変更することがあります。変更後の規約は、本ページに掲載した時点で効力を生じるものとします。重要な変更がある場合は、本サービス上でお知らせします。
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">9. 準拠法・裁判管轄</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">10. 準拠法・裁判管轄</h2>
             <p className="mb-3">
               本規約は日本法に準拠します。本規約または本サービスに関する一切の紛争については、東京地方裁判所または東京簡易裁判所を第一審の専属的合意管轄裁判所とします。
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">10. お問い合わせ</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">11. お問い合わせ</h2>
             <p className="mb-2">本規約に関するお問い合わせは、以下までご連絡ください。</p>
             <div className="bg-knd-indigo-light/40 rounded-xl p-4 border border-knd-purple/20">
               <p className="font-bold text-knd-lavender mb-1">MIKADO WORKS</p>
