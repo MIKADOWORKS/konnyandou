@@ -87,9 +87,9 @@ export default function HomePage() {
             <Image
               src="/images/logo.png"
               alt="こんにゃん堂"
-              width={200}
-              height={112}
-              className="mx-auto rounded-xl"
+              width={430}
+              height={241}
+              className="w-full rounded-xl"
               priority
             />
           </div>
