@@ -18,12 +18,10 @@
     "@anthropic-ai/sdk": "^0.80.0",
     "@upstash/redis": "^1.37.0",
     "@vercel/analytics": "^2.0.1",
-    "framer-motion": "^12.38.0",
     "next": "16.2.1",
     "payjp": "^3.0.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "twitter-api-v2": "^1.29.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -35,6 +33,7 @@
     "eslint-config-next": "16.2.1",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
+    "twitter-api-v2": "^1.29.0",
     "typescript": "^5"
   }
 }
