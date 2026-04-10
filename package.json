@@ -12,7 +12,8 @@
     "post:x": "tsx scripts/post-to-x.ts",
     "post:threads": "tsx scripts/post-to-threads.ts",
     "weekly": "tsx scripts/generate-weekly-content.ts",
-    "noa:chat": "tsx scripts/post-noa-chat.ts"
+    "noa:chat": "tsx scripts/post-noa-chat.ts",
+    "generate:code": "tsx scripts/generate-code.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",

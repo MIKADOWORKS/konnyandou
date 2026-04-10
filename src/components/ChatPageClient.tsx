@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import NoaAvatar from '@/components/NoaAvatar';
 import UsageBadge from '@/components/UsageBadge';
 import TicketPurchaseModal from '@/components/TicketPurchaseModal';
+import RedeemCodeModal from '@/components/RedeemCodeModal';
 
 interface Message {
   from: 'noa' | 'user';
@@ -28,6 +29,7 @@ export default function ChatPageClient() {
   const [isTyping, setIsTyping] = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showRedeemModal, setShowRedeemModal] = useState(false);
   const [usage, setUsage] = useState<UsageState>({
     chatCount: 0,
     chatLimit: 3,
@@ -189,6 +191,13 @@ export default function ChatPageClient() {
           </div>
         </div>
         <UsageBadge usage={usage} />
+        <button
+          onClick={() => setShowRedeemModal(true)}
+          className="text-[11px] text-knd-lavender/40 hover:text-knd-lavender/70 transition-colors px-1"
+          title="コードを入力"
+        >
+          コード
+        </button>
       </div>
 
       {/* Messages */}
@@ -290,6 +299,19 @@ export default function ChatPageClient() {
       {/* チケット購入モーダル（決済が有効な場合のみ） */}
       {showPurchaseModal && process.env.NEXT_PUBLIC_PAYMENT_ENABLED === 'true' && (
         <TicketPurchaseModal onClose={() => setShowPurchaseModal(false)} />
+      )}
+
+      {/* コード入力モーダル */}
+      {showRedeemModal && (
+        <RedeemCodeModal
+          onClose={() => setShowRedeemModal(false)}
+          onRedeemed={(chatTurns, _spreadCount) => {
+            setUsage((prev) => ({
+              ...prev,
+              chatTickets: prev.chatTickets + chatTurns,
+            }));
+          }}
+        />
       )}
     </div>
   );
