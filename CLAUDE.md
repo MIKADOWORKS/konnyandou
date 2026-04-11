@@ -8,6 +8,7 @@
 - **ターゲット:** 18〜30代女性（占いライト層）、手軽に無料で占いを楽しみたいユーザー
 - **URL:** https://konnyandou.jp（Vercel Hobby plan）
 - **GitHub:** MIKADOWORKS/konnyandou
+- **コンセプト設計図:** `docs/CONCEPT.md` — note / SNS / サイト制作すべてのコンテンツの最上位設計図
 
 ## チーム体制
 
