@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import StarField from '@/components/StarField';
 import ConstellationDecor from '@/components/ConstellationDecor';
 import SingleDraw from '@/components/tarot/SingleDraw';
@@ -67,6 +68,28 @@ export default function TarotPageClient() {
             </button>
           </div>
         )}
+
+        {/* Card encyclopedia link */}
+        <div className="mt-8">
+          <div className="border-t border-knd-lavender/15 my-4" />
+          <Link
+            href="/tarot/cards"
+            className="block bg-knd-indigo/60 border border-knd-lavender/15 rounded-2xl p-4 transition-colors hover:border-knd-gold/30"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xl text-knd-gold/80">{'\u2726'}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13.5px] text-knd-lavender font-bold mb-0.5">
+                  大アルカナ22枚の解説を見る
+                </p>
+                <p className="text-[11px] text-knd-lavender/55">
+                  愚者から世界まで、カードの意味を一覧で
+                </p>
+              </div>
+              <span className="text-knd-lavender/40 text-base shrink-0">›</span>
+            </div>
+          </Link>
+        </div>
       </div>
     </div>
   );
