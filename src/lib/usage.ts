@@ -1,7 +1,6 @@
 import { getRedis } from './redis';
 
 export const FREE_CHAT_LIMIT = 3;
-export const TICKET_CHAT_TURNS = 15;
 
 function todayKeyJST(): string {
   const now = new Date();
@@ -21,7 +20,7 @@ function secondsUntilMidnightJST(): number {
   return Math.max(1, Math.floor((midnight.getTime() - jstNow.getTime()) / 1000));
 }
 
-// --- チャット日次カウント ---
+// --- チャット日次カウント（APIコスト暴走防止） ---
 
 export async function getDailyChatCount(uid: string): Promise<number> {
   const key = `chat:count:${uid}:${todayKeyJST()}`;
@@ -36,67 +35,4 @@ export async function incrementChatCount(uid: string): Promise<number> {
     await getRedis().expire(key, secondsUntilMidnightJST());
   }
   return count;
-}
-
-// --- チャットチケット ---
-
-export async function getChatTickets(uid: string): Promise<number> {
-  const count = await getRedis().get<number>(`tickets:chat:${uid}`);
-  return count ?? 0;
-}
-
-export async function consumeChatTicket(uid: string): Promise<boolean> {
-  const key = `tickets:chat:${uid}`;
-  const remaining = await getRedis().get<number>(key);
-  if (!remaining || remaining <= 0) return false;
-  await getRedis().decr(key);
-  return true;
-}
-
-export async function addChatTickets(uid: string, count: number): Promise<void> {
-  const key = `tickets:chat:${uid}`;
-  await getRedis().incrby(key, count);
-}
-
-// --- スプレッドチケット ---
-
-export async function getSpreadTickets(uid: string): Promise<number> {
-  const count = await getRedis().get<number>(`tickets:spread:${uid}`);
-  return count ?? 0;
-}
-
-export async function consumeSpreadTicket(uid: string): Promise<boolean> {
-  const key = `tickets:spread:${uid}`;
-  const remaining = await getRedis().get<number>(key);
-  if (!remaining || remaining <= 0) return false;
-  await getRedis().decr(key);
-  return true;
-}
-
-export async function addSpreadTickets(uid: string, count: number): Promise<void> {
-  const key = `tickets:spread:${uid}`;
-  await getRedis().incrby(key, count);
-}
-
-// --- 使用量サマリー ---
-
-export interface UsageSummary {
-  chatCount: number;
-  chatLimit: number;
-  chatTickets: number;
-  spreadTickets: number;
-}
-
-export async function getUsageSummary(uid: string): Promise<UsageSummary> {
-  const [chatCount, chatTickets, spreadTickets] = await Promise.all([
-    getDailyChatCount(uid),
-    getChatTickets(uid),
-    getSpreadTickets(uid),
-  ]);
-  return {
-    chatCount,
-    chatLimit: FREE_CHAT_LIMIT,
-    chatTickets,
-    spreadTickets,
-  };
 }

@@ -2,19 +2,10 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import NoaAvatar from '@/components/NoaAvatar';
-import UsageBadge from '@/components/UsageBadge';
-import TicketPurchaseModal from '@/components/TicketPurchaseModal';
 
 interface Message {
   from: 'noa' | 'user';
   text: string;
-}
-
-interface UsageState {
-  chatCount: number;
-  chatLimit: number;
-  chatTickets: number;
-  source: 'free' | 'ticket';
 }
 
 export default function ChatPageClient() {
@@ -27,29 +18,7 @@ export default function ChatPageClient() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [streamingText, setStreamingText] = useState('');
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [usage, setUsage] = useState<UsageState>({
-    chatCount: 0,
-    chatLimit: 3,
-    chatTickets: 0,
-    source: 'free',
-  });
   const chatEndRef = useRef<HTMLDivElement>(null);
-
-  // 初回マウント時に使用量を取得
-  useEffect(() => {
-    fetch('/api/usage')
-      .then((res) => res.json())
-      .then((data) => {
-        setUsage({
-          chatCount: data.chatCount ?? 0,
-          chatLimit: data.chatLimit ?? 3,
-          chatTickets: data.chatTickets ?? 0,
-          source: (data.chatCount ?? 0) >= (data.chatLimit ?? 3) ? 'ticket' : 'free',
-        });
-      })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -83,25 +52,12 @@ export default function ChatPageClient() {
             ...prev,
             { from: 'noa', text: errorData.message },
           ]);
-          setShowPurchaseModal(true);
           return;
         }
         throw new Error('Rate limited');
       }
 
       if (!res.ok) throw new Error('API error');
-
-      // レスポンスヘッダーから残回数を取得
-      const remaining = res.headers.get('X-Chat-Remaining');
-      const source = res.headers.get('X-Chat-Source') as 'free' | 'ticket' | null;
-      if (remaining !== null && source) {
-        setUsage((prev) => ({
-          ...prev,
-          chatCount: source === 'free' ? prev.chatLimit - Number(remaining) : prev.chatCount,
-          chatTickets: source === 'ticket' ? Number(remaining) : prev.chatTickets,
-          source,
-        }));
-      }
 
       const reader = res.body?.getReader();
       if (!reader) throw new Error('No reader');
@@ -188,7 +144,6 @@ export default function ChatPageClient() {
             {isTyping ? '\u{270D}\uFE0F 入力中...' : '\u25CF オンライン'}
           </div>
         </div>
-        <UsageBadge usage={usage} />
       </div>
 
       {/* Messages */}
@@ -287,10 +242,6 @@ export default function ChatPageClient() {
         </button>
       </div>
 
-      {/* チケット購入モーダル（決済が有効な場合のみ） */}
-      {showPurchaseModal && process.env.NEXT_PUBLIC_PAYMENT_ENABLED === 'true' && (
-        <TicketPurchaseModal onClose={() => setShowPurchaseModal(false)} />
-      )}
     </div>
   );
 }

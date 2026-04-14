@@ -80,12 +80,22 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">3. Google AdSense による広告配信</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">3. Vercel Analytics によるアクセス解析</h2>
+            <p className="mb-3">
+              本サービスでは、ホスティング事業者であるVercel Inc.が提供する「Vercel Analytics」を使用して、ページビュー数や参照元などの匿名化された利用統計を収集しています。Vercel Analyticsは個人を特定するCookieを使用せず、IPアドレスも取得後すぐに匿名化されるため、個人を特定する形での情報収集は行われません。
+            </p>
+            <p className="mt-0 text-knd-lavender/60 text-[13px]">
+              詳細：<a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline hover:text-knd-lavender transition-colors">Vercel Analytics プライバシーポリシー</a>
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">4. Google AdSense による広告配信</h2>
             <p className="mb-3">
               本サービスでは、Googleが提供する広告配信サービス「Google AdSense」を使用しています。Google AdSenseは、ユーザーの興味に合わせた広告を表示するためにCookieを使用します。
             </p>
             <p className="mb-3">
-              これらのCookieにより、Googleや提携サービスがお客様の本サービスおよび他のサイトへの過去のアクセス情報に基づいて広告を表示する場合があります。
+              第三者配信事業者であるGoogleを含む広告配信事業者は、ユーザーが本サービスや他のサイトへアクセスした情報に基づいて広告を配信するためにCookieを使用することがあります。お客様はGoogle広告設定ページにアクセスすることで、Googleによるパーソナライズ広告配信を無効化することが可能です。
             </p>
             <p className="mb-2">
               パーソナライズ広告を無効にする場合は、以下をご利用ください。
@@ -103,7 +113,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">4. Anthropic Claude API への入力データ</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">5. Anthropic Claude API への入力データ</h2>
             <p className="mb-3">
               本サービスの占い機能は、Anthropic社が提供するClaude APIを使用しています。占いの質問内容・生年月日などの入力情報はAnthropicのサーバーに送信され、AIによる占い結果の生成に使用されます。
             </p>
@@ -129,7 +139,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">5. 情報の利用目的</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">6. 情報の利用目的</h2>
             <ul className="space-y-2 pl-4">
               <li className="flex gap-2">
                 <span className="text-knd-gold shrink-0">・</span>
@@ -151,7 +161,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">6. 第三者への提供</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">7. 第三者への提供</h2>
             <p className="mb-3">
               当社は、以下の場合を除き、お客様の情報を第三者に提供することはありません。
             </p>
@@ -176,21 +186,21 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">7. Cookie の管理</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">8. Cookie の管理</h2>
             <p>
               お客様はブラウザの設定によりCookieを無効にすることができます。ただし、Cookieを無効にした場合、本サービスの一部機能が正常に動作しない場合があります。
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">8. プライバシーポリシーの変更</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">9. プライバシーポリシーの変更</h2>
             <p>
               当社は、必要に応じて本プライバシーポリシーを変更することがあります。変更後のプライバシーポリシーは、本ページに掲載した時点で効力を生じるものとします。
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-bold text-knd-lavender mb-3">9. お問い合わせ</h2>
+            <h2 className="text-base font-bold text-knd-lavender mb-3">10. お問い合わせ</h2>
             <p className="mb-2">本プライバシーポリシーに関するお問い合わせは、以下までご連絡ください。</p>
             <div className="bg-knd-indigo-light/40 rounded-xl p-4 border border-knd-purple/20">
               <p className="font-bold text-knd-lavender mb-1">MIKADO WORKS</p>

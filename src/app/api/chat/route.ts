@@ -7,8 +7,6 @@ import { rateLimit } from '@/lib/rate-limit';
 import {
   getDailyChatCount,
   incrementChatCount,
-  getChatTickets,
-  consumeChatTicket,
   FREE_CHAT_LIMIT,
 } from '@/lib/usage';
 
@@ -77,22 +75,15 @@ export async function POST(req: NextRequest) {
     }
 
     const dailyCount = await getDailyChatCount(uid);
-    let source: 'free' | 'ticket' = 'free';
-    let remaining = FREE_CHAT_LIMIT - dailyCount;
 
     if (dailyCount >= FREE_CHAT_LIMIT) {
-      const tickets = await getChatTickets(uid);
-      if (tickets <= 0) {
-        return NextResponse.json(
-          {
-            error: 'limit_reached',
-            message: '今日の無料チャットを使い切っちゃった！チケットを買うともっとチャットできるよ✨',
-          },
-          { status: 429 }
-        );
-      }
-      source = 'ticket';
-      remaining = tickets;
+      return NextResponse.json(
+        {
+          error: 'limit_reached',
+          message: '今日のおしゃべりはここまで！明日また話しかけてにゃ🐱',
+        },
+        { status: 429 }
+      );
     }
 
     const { message, history, stream } = parsed.data;
@@ -102,17 +93,11 @@ export async function POST(req: NextRequest) {
     const CHAT_MODEL = 'claude-sonnet-4-6';
 
     // 使用量を消費（API呼び出し前にカウント）
-    if (source === 'free') {
-      await incrementChatCount(uid);
-      remaining = FREE_CHAT_LIMIT - (dailyCount + 1);
-    } else {
-      await consumeChatTicket(uid);
-      remaining = remaining - 1;
-    }
+    await incrementChatCount(uid);
+    const remaining = FREE_CHAT_LIMIT - (dailyCount + 1);
 
     const usageHeaders = {
       'X-Chat-Remaining': String(remaining),
-      'X-Chat-Source': source,
     };
 
     // ストリーミングモード
