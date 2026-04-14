@@ -137,7 +137,7 @@ export default function TarotCardsIndexPage() {
             href="/tarot"
             className="inline-block text-[13px] text-knd-gold/80 hover:text-knd-gold transition-colors underline underline-offset-4"
           >
-            タロット占いトップに戻る
+            タロットトップに戻る
           </Link>
         </div>
       </div>

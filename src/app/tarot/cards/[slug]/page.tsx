@@ -267,7 +267,7 @@ export default async function TarotCardPage({ params }: Props) {
                 href="/tarot"
                 className="inline-block text-[12px] text-knd-lavender/50 hover:text-knd-lavender transition-colors"
               >
-                タロット占いトップへ
+                タロットトップへ
               </Link>
             </div>
           </section>
