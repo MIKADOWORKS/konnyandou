@@ -1,26 +1,51 @@
-'use client';
+// Deterministic pseudo-random generator (mulberry32).
+// We avoid Math.random() because it diverges between SSR and client,
+// which triggers a React hydration mismatch (and then next/image and
+// sibling DOM can get unmounted/remounted, making content disappear).
+function mulberry32(seed: number) {
+  return function () {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
 
-import { useMemo } from 'react';
+const STAR_COUNT = 60;
+
+interface Star {
+  id: number;
+  left: string;
+  top: string;
+  size: number;
+  color: string;
+  delay: number;
+  duration: number;
+}
+
+// Computed once at module load — identical values on server and client
+// because the seed and algorithm are deterministic.
+const STARS: Star[] = (() => {
+  const rand = mulberry32(0xc8a8ff);
+  return Array.from({ length: STAR_COUNT }, (_, i) => {
+    const size = rand() * 2.5 + 0.5;
+    return {
+      id: i,
+      left: `${(rand() * 100).toFixed(4)}%`,
+      top: `${(rand() * 100).toFixed(4)}%`,
+      size: Number(size.toFixed(4)),
+      color: size > 2 ? '#f0d060' : '#c8b8e8',
+      delay: Number((rand() * 4).toFixed(4)),
+      duration: Number((rand() * 3 + 2).toFixed(4)),
+    };
+  });
+})();
 
 export default function StarField() {
-  const stars = useMemo(() => {
-    return Array.from({ length: 60 }, (_, i) => {
-      const size = Math.random() * 2.5 + 0.5;
-      return {
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size,
-        color: size > 2 ? '#f0d060' : '#c8b8e8',
-        delay: Math.random() * 4,
-        duration: Math.random() * 3 + 2,
-      };
-    });
-  }, []);
-
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {stars.map((star) => (
+      {STARS.map((star) => (
         <div
           key={star.id}
           className="absolute rounded-full animate-twinkle"
